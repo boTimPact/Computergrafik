@@ -67,6 +67,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 	float angle = 0;
 	float offset = 0;
+	float delta = 0.05f;
 	@Override
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
@@ -94,15 +95,16 @@ public class Projekt extends AbstractOpenGLBase {
 		modelMatrixReading = new Matrix4();
 		modelMatrixReading.rotateY(angle/5);
 		modelMatrixReading.rotateZ(angle/10);
+		modelMatrixReading.rotateX(angle);
 		modelMatrixReading.scale(2);
 
-		modelMatrixReading.translate(0, 0,-10);
+		modelMatrixReading.translate(offset, 0,-15);
 
 
 		angle += 0.01;
-		offset += 0.05;
-		if(offset > 25){
-			offset = -25;
+		offset += delta;
+		if(offset > 10 || offset < -10){
+			delta *= -1;
 		}
 	}
 
