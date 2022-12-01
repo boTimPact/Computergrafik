@@ -50,7 +50,7 @@ public class Projekt extends AbstractOpenGLBase {
 		createVBO(plane.vertices,3,0);
 		createVBO(plane.color, 3,1);
 
-		Figure readFromFile = new Figure("src/res/WeirdHouse.obj");
+		Figure readFromFile = new Figure("src/res/House.obj");
 		this.vaos.add(glGenVertexArrays());
 		glBindVertexArray(vaos.get(vaos.size() - 1));
 		createVBO(readFromFile.vertices,3,0);
@@ -112,6 +112,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 		// Matrix an Shader übertragen
 		// VAOs zeichnen
+		// TODO: eigene Klasse für VAOs sodass ich die länge automatisch lesen kann und nicht per hand eingeben muss -> glDrawArrays()
 		glUniformMatrix4fv(loc[0],false, modelMatrixPyramide.getValuesAsArray());
 		glUniformMatrix4fv(loc[1], false, projectionMatrix.getValuesAsArray());
 		glBindVertexArray(this.vaos.get(0));

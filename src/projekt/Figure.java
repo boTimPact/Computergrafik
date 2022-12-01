@@ -93,12 +93,6 @@ public class Figure {
             color[i] = col;
         }
     }
-
-    public static void main(String[] args) {
-        Figure test = new Figure();
-        test.loadFromFile("src/res/cube.obj");
-        System.out.println();
-    }
 }
 
 
