@@ -115,11 +115,10 @@ public class Projekt extends AbstractOpenGLBase {
 
 		// Matrix an Shader übertragen
 		// VAOs zeichnen
-		// TODO: eigene Klasse für VAOs sodass ich die länge automatisch lesen kann und nicht per hand eingeben muss -> glDrawArrays()
 		glUniformMatrix4fv(locMatrices[1], false, viewMatrix.getValuesAsArray());
 		glUniformMatrix4fv(locMatrices[2], false, projectionMatrix.getValuesAsArray());
 
-		for (int i = 0; i < vaos.size(); i++) {
+		for (int i = 0; i < this.vaos.size(); i++) {
 			VAO tmp = this.vaos.get(i);
 			glUniformMatrix4fv(locMatrices[0],false, tmp.modelMatrix.getValuesAsArray());
 			glBindVertexArray(tmp.location);

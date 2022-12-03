@@ -136,9 +136,10 @@ public class Matrix4f {
 		return arr;
 	}
 
-
+	/*
 	public static void main(String[] args) {
 		Matrix4f test = new Matrix4f(1);
 		System.out.println("test");
 	}
+	*/
 }
