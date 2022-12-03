@@ -10,12 +10,12 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class VAO {
     public int location;
     public Mesh mesh;
-    public Matrix4 modelMatrix;
+    public Matrix4f modelMatrix;
     public int vboIndices;
 
 
 
-    public VAO(Mesh mesh, Matrix4 model){
+    public VAO(Mesh mesh, Matrix4f model){
         this.mesh = mesh;
         this.modelMatrix = model;
         location = glGenVertexArrays();
@@ -23,7 +23,7 @@ public class VAO {
         this.bindVBOs();
     }
 
-    public void updateModel(Matrix4 model){
+    public void updateModel(Matrix4f model){
         this.modelMatrix.multiply(model);
     }
 

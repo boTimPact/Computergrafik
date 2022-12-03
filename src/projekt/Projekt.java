@@ -14,9 +14,9 @@ import java.util.List;
 public class Projekt extends AbstractOpenGLBase {
 	private ShaderProgram shaderProgram;
 	private List<VAO> vaos = new LinkedList<>();
-	private Matrix4 projectionMatrix;
-	private Matrix4 viewMatrix;
-	private Matrix4 modelMatrix;
+	private Matrix4f projectionMatrix;
+	private Matrix4f viewMatrix;
+	private Matrix4f modelMatrix;
 	private int locMatrices[] = new int[3];
 
 	public static void main(String[] args) {
@@ -30,25 +30,25 @@ public class Projekt extends AbstractOpenGLBase {
 
 		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
 		Mesh pyramide = new Mesh(1);
-		this.vaos.add(new VAO(pyramide, new Matrix4()));
+		this.vaos.add(new VAO(pyramide, new Matrix4f()));
 
 
 		Mesh tetraeder = new Mesh(1f);
-		this.vaos.add(new VAO(tetraeder, new Matrix4()));
+		this.vaos.add(new VAO(tetraeder, new Matrix4f()));
 
 
 
 		Mesh plane = new Mesh(0.);
-		this.vaos.add(new VAO(plane, new Matrix4()));
+		this.vaos.add(new VAO(plane, new Matrix4f()));
 
 
 		OBJFileReader reader = new OBJFileReader();
 		Mesh readFromFile = reader.readFile("src/res/House.obj");
-		this.vaos.add(new VAO(readFromFile, new Matrix4()));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 		Camera camera = new Camera();
-		viewMatrix = new Matrix4(camera.pos, camera.u, camera.v, camera.n);
-		projectionMatrix = new Matrix4(1, 150, 1.777f,1);
+		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
+		projectionMatrix = new Matrix4f(1, 150, 1.777f,1);
 
 		locMatrices[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix");
 		locMatrices[1] = glGetUniformLocation(shaderProgram.getId(), "viewMatrix");
@@ -66,7 +66,7 @@ public class Projekt extends AbstractOpenGLBase {
 	@Override
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
-		modelMatrix = new Matrix4();
+		modelMatrix = new Matrix4f();
 		//modelMatrix.rotateZ(-angle);
 		//modelMatrix.translate(0,0,-4);
 		//modelMatrix.rotateX(angle / 2);
@@ -75,7 +75,7 @@ public class Projekt extends AbstractOpenGLBase {
 		vaos.get(0).updateModel(modelMatrix);
 
 
-		modelMatrix= new Matrix4();
+		modelMatrix= new Matrix4f();
 		//modelMatrix.scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)));
 		//modelMatrix.translate(0,8f,0);
 		//modelMatrix.rotateZ(angle/2);
@@ -86,14 +86,14 @@ public class Projekt extends AbstractOpenGLBase {
 		vaos.get(1).updateModel(modelMatrix);
 
 
-		modelMatrix = new Matrix4();
+		modelMatrix = new Matrix4f();
 		modelMatrix.scale(200,0,100);
 		//modelMatrix.rotateX((float)Math.toRadians(90));
 		modelMatrix.translate(0,-15,-20);
 		vaos.get(2).updateModel(modelMatrix);
 
 
-		modelMatrix = new Matrix4();
+		modelMatrix = new Matrix4f();
 		//modelMatrix.rotateY(angle/5);
 		//modelMatrix.rotateZ(angle/10);
 		//modelMatrix.rotateX(angle);
