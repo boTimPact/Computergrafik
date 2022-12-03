@@ -14,7 +14,6 @@ public class VAO {
     public int vboIndices;
 
 
-
     public VAO(Mesh mesh, Matrix4f model){
         this.mesh = mesh;
         this.modelMatrix = model;
@@ -28,7 +27,6 @@ public class VAO {
     }
 
 
-
     public void bindVBOs(){
         int vboVertex = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboVertex);
@@ -38,7 +36,7 @@ public class VAO {
 
         int vboColor = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboColor);
-        glBufferData(GL_ARRAY_BUFFER, mesh.color, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, mesh.ctoArray(), GL_STATIC_DRAW);
         glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(1);
 

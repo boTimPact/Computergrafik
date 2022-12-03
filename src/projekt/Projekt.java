@@ -14,6 +14,7 @@ import java.util.List;
 public class Projekt extends AbstractOpenGLBase {
 	private ShaderProgram shaderProgram;
 	private List<VAO> vaos = new LinkedList<>();
+	Camera camera = new Camera();
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Matrix4f modelMatrix;
@@ -28,6 +29,9 @@ public class Projekt extends AbstractOpenGLBase {
 		shaderProgram = new ShaderProgram("projekt");
 		glUseProgram(shaderProgram.getId());
 
+		Mesh cube = new Mesh('A');
+		this.vaos.add(new VAO(cube, new Matrix4f()));
+/*
 		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
 		Mesh pyramide = new Mesh(1);
 		this.vaos.add(new VAO(pyramide, new Matrix4f()));
@@ -37,16 +41,17 @@ public class Projekt extends AbstractOpenGLBase {
 		this.vaos.add(new VAO(tetraeder, new Matrix4f()));
 
 
-
+*/
 		Mesh plane = new Mesh(0.);
 		this.vaos.add(new VAO(plane, new Matrix4f()));
 
-
+/*
 		OBJFileReader reader = new OBJFileReader();
-		Mesh readFromFile = reader.readFile("src/res/Cube.obj");
+		Mesh readFromFile = reader.readFile("src/res/House.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+*/
 
-		Camera camera = new Camera();
+
 		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
 		projectionMatrix = new Matrix4f(1, 150, 1.777f,1);
 
@@ -66,13 +71,22 @@ public class Projekt extends AbstractOpenGLBase {
 	@Override
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
+
+		modelMatrix = new Matrix4f();
+		modelMatrix.rotateX(angle);
+		modelMatrix.rotateY(angle);
+		modelMatrix.rotateZ(angle/2);
+		modelMatrix.translate(offset,0,-15);
+		vaos.get(0).updateModel(modelMatrix);
+
+/*
 		modelMatrix = new Matrix4f();
 		modelMatrix.rotateZ(-angle);
 		//modelMatrix.translate(0,0,-4);
 		modelMatrix.rotateX(angle / 2);
 		modelMatrix.rotateY(angle * 2);
 		modelMatrix.translate(4,2,-10);
-		vaos.get(0).updateModel(modelMatrix);
+		vaos.get(1).updateModel(modelMatrix);
 
 
 		modelMatrix= new Matrix4f();
@@ -83,28 +97,31 @@ public class Projekt extends AbstractOpenGLBase {
 		modelMatrix.rotateX(angle/4);
 		modelMatrix.rotateY(-angle);
 		modelMatrix.translate(-3,0,-25);
-		vaos.get(1).updateModel(modelMatrix);
-
-
-		modelMatrix = new Matrix4f();
-		modelMatrix.scale(200,0,100);
-		//modelMatrix.rotateX((float)Math.toRadians(90));
-		modelMatrix.translate(0,-15,-20);
 		vaos.get(2).updateModel(modelMatrix);
 
+*/
+		modelMatrix = new Matrix4f();
+		modelMatrix.scale(2);
+		modelMatrix.rotateX(angle);
+		modelMatrix.translate(-15,10,-30);
+		vaos.get(1).updateModel(modelMatrix);
 
+/*
 		modelMatrix = new Matrix4f();
 		modelMatrix.rotateY(angle/5);
 		modelMatrix.rotateZ(angle/10);
 		modelMatrix.rotateX(angle);
 		modelMatrix.scale(2);
-		modelMatrix.translate(0, 0,-15);
-		vaos.get(3).updateModel(modelMatrix);
+		modelMatrix.translate(-6, 2,-15);
+		vaos.get(1).updateModel(modelMatrix);
+*/
 
+		camera.pos.multiplyMatrix(new Matrix4f().translate(0,offset/100,0));
+		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
 
 		angle += 0.01;
 		offset += delta;
-		if(offset > 10 || offset < -10){
+		if(offset > 6.5 || offset < -6.5){
 			delta *= -1;
 		}
 	}
@@ -122,20 +139,11 @@ public class Projekt extends AbstractOpenGLBase {
 			VAO tmp = this.vaos.get(i);
 			glUniformMatrix4fv(locMatrices[0],false, tmp.modelMatrix.getValuesAsArray());
 			glBindVertexArray(tmp.location);
-			glDrawElements(GL_TRIANGLES, tmp.mesh.indices.length, GL_UNSIGNED_INT, tmp.vboIndices);
+			glDrawElements(GL_TRIANGLES, tmp.mesh.indices.length, GL_UNSIGNED_INT, tmp.vboIndices);	//https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawElements.xhtml
 		}
 	}
 
 	@Override
 	public void destroy() {
-	}
-
-	public void createVBO(float[] input, int size, int index){
-		int vbo = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-		glBufferData(GL_ARRAY_BUFFER, input,GL_STATIC_DRAW);
-		glVertexAttribPointer(index,size,GL_FLOAT, false, 0,0);
-		glEnableVertexAttribArray(index);
 	}
 }
