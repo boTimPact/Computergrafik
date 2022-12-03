@@ -15,10 +15,10 @@ public class Matrix4 {
 	}
 
 	public Matrix4(int a){
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				this.matrix[i][j] = i * 4 + j;
-			}
+		for (int i = 0; i < 4; i++) {				//{  0, 1, 2, 3,
+			for (int j = 0; j < 4; j++) {			//	 4, 5, 6, 7,
+				this.matrix[i][j] = i * 4 + j;		//	 8, 9,10,11
+			}										//	12,13,14,15}
 		}
 	}
 
@@ -36,6 +36,13 @@ public class Matrix4 {
 		this.matrix[2][2] = (-far - near) / (far - near);
 		this.matrix[2][3] = (-2 * near * far) / (far - near);
 		this.matrix[3][2] = -1;
+	}
+
+	public  Matrix4(Vector3f pos, Vector3f u, Vector3f v, Vector3f n){
+		this.matrix[0] = new float[]{u.x, u.y, u.z, -pos.x};
+		this.matrix[1] = new float[]{v.x, v.y, v.z, -pos.y};
+		this.matrix[2] = new float[]{n.x, n.y, n.z, -pos.z};
+		this.matrix[3] = new float[]{  0,	0,	 0,		 1};
 	}
 
 	public Matrix4 multiply(Matrix4 other) {
@@ -127,5 +134,11 @@ public class Matrix4 {
 			}
 		}
 		return arr;
+	}
+
+
+	public static void main(String[] args) {
+		Matrix4 test = new Matrix4(1);
+		System.out.println("test");
 	}
 }

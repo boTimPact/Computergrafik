@@ -1,21 +1,19 @@
 package projekt;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileNotFoundException;;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OBJFileReader{
-    private List<Vector3> vertices = new LinkedList<>();
+    private List<Vector3f> vertices = new LinkedList<>();
     private List<Integer> indices = new LinkedList<>();
     private float out[];
 
-    public float[] readFile(String path){
+    public Mesh readFile(String path){
 
         File file = new File(path);
         BufferedReader reader;
@@ -27,7 +25,7 @@ public class OBJFileReader{
             while (line != null) {
                 String parts[] = line.split(" ");
                 if(parts[0].equals("v")){                   // v = vertex, vt = Texturkoordinaten, vn = Normale, f = Fläche,
-                    vertices.add(new Vector3(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3])));
+                    vertices.add(new Vector3f(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3])));
                     }
                 if(parts[0].equals("f")){
                     indices.add(Integer.valueOf(parts[1].charAt(0)) - 48);
@@ -45,17 +43,13 @@ public class OBJFileReader{
             e.printStackTrace();
         }
 
-        List<Float> tmp = new LinkedList<>();
-        for (int i = 0; i < indices.size(); i++) {
-            float vecToArr[] = new float[3];
-            vertices.get(indices.get(i)-1).addToArr(vecToArr);
-            for (int j = 0; j < 3; j++) {
-                tmp.add(vecToArr[j]);
-            }
+        Mesh out = new Mesh(vertices.size(), indices.size());
+
+        for (int i = 0; i < out.vertices.length; i++) {
+            out.vertices[i] = this.vertices.get(i);
         }
-        out = new float[tmp.size()];
-        for (int i = 0; i < tmp.size(); i++) {
-            out[i] = tmp.get(i).floatValue();
+        for (int i = 0; i < out.indices.length; i++) {
+            out.indices[i] = this.indices.get(i);
         }
 
         return out;
