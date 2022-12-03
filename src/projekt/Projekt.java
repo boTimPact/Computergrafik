@@ -43,7 +43,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 
 		OBJFileReader reader = new OBJFileReader();
-		Mesh readFromFile = reader.readFile("src/res/House.obj");
+		Mesh readFromFile = reader.readFile("src/res/Cube.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 		Camera camera = new Camera();
@@ -67,22 +67,22 @@ public class Projekt extends AbstractOpenGLBase {
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
 		modelMatrix = new Matrix4f();
-		//modelMatrix.rotateZ(-angle);
+		modelMatrix.rotateZ(-angle);
 		//modelMatrix.translate(0,0,-4);
-		//modelMatrix.rotateX(angle / 2);
-		//modelMatrix.rotateY(angle * 2);
-		modelMatrix.translate(0,0,-5);
+		modelMatrix.rotateX(angle / 2);
+		modelMatrix.rotateY(angle * 2);
+		modelMatrix.translate(4,2,-10);
 		vaos.get(0).updateModel(modelMatrix);
 
 
 		modelMatrix= new Matrix4f();
-		//modelMatrix.scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)));
-		//modelMatrix.translate(0,8f,0);
-		//modelMatrix.rotateZ(angle/2);
-		//modelMatrix.translate(0,-8f,0);
-		//modelMatrix.rotateX(angle/4);
-		//modelMatrix.rotateY(-angle);
-		modelMatrix.translate(0,0,-10);
+		modelMatrix.scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)));
+		modelMatrix.translate(0,8f,0);
+		modelMatrix.rotateZ(angle/2);
+		modelMatrix.translate(0,-8f,0);
+		modelMatrix.rotateX(angle/4);
+		modelMatrix.rotateY(-angle);
+		modelMatrix.translate(-3,0,-25);
 		vaos.get(1).updateModel(modelMatrix);
 
 
@@ -94,11 +94,11 @@ public class Projekt extends AbstractOpenGLBase {
 
 
 		modelMatrix = new Matrix4f();
-		//modelMatrix.rotateY(angle/5);
-		//modelMatrix.rotateZ(angle/10);
-		//modelMatrix.rotateX(angle);
+		modelMatrix.rotateY(angle/5);
+		modelMatrix.rotateZ(angle/10);
+		modelMatrix.rotateX(angle);
 		modelMatrix.scale(2);
-		modelMatrix.translate(0, 0,-2);
+		modelMatrix.translate(0, 0,-15);
 		vaos.get(3).updateModel(modelMatrix);
 
 
@@ -122,7 +122,7 @@ public class Projekt extends AbstractOpenGLBase {
 			VAO tmp = this.vaos.get(i);
 			glUniformMatrix4fv(locMatrices[0],false, tmp.modelMatrix.getValuesAsArray());
 			glBindVertexArray(tmp.location);
-			glDrawElements(GL_TRIANGLES, tmp.mesh.indices.length * 3, GL_UNSIGNED_INT, tmp.vboIndices);
+			glDrawElements(GL_TRIANGLES, tmp.mesh.indices.length, GL_UNSIGNED_INT, tmp.vboIndices);
 		}
 	}
 

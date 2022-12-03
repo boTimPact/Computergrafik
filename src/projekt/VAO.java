@@ -24,7 +24,7 @@ public class VAO {
     }
 
     public void updateModel(Matrix4f model){
-        this.modelMatrix.multiply(model);
+        this.modelMatrix = new Matrix4f(model);
     }
 
 

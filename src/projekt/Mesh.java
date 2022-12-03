@@ -12,6 +12,7 @@ public class Mesh {
         color = new float[]{1,0,0, 0,1,0, 0,0,1};
     }
 
+    //Pyramide
     public Mesh(int a) {
         vertices = new Vector3f[]{
                 new Vector3f(0, 1, 0),
@@ -38,10 +39,12 @@ public class Mesh {
         };
     }
 
+    //Tetraeder
     public Mesh(float a){
         float h = (float)(Math.sqrt(3) / 2);
+        float b = (float)(2 * Math.pow(h,2));
         vertices = new Vector3f[]{
-                new Vector3f(0,1,0),
+                new Vector3f(0, b,0),
                 new Vector3f(1,0,-h),
                 new Vector3f(-1,0,-h),
                 new Vector3f(0,0,h),
@@ -62,6 +65,7 @@ public class Mesh {
         };
     }
 
+    //Plane
     public Mesh(double a){
         vertices = new Vector3f[]{
                 new Vector3f(-1,-1,1),
