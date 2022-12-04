@@ -1,5 +1,7 @@
 package projekt;
 
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+
 //Alle Operationen ändern das Matrixobjekt selbst und geben das eigene Matrixobjekt zurück
 //Dadurch kann man Aufrufe verketten, z.B.
 //Matrix4 m = new Matrix4().scale(5).translate(0,1,0).rotateX(0.5f);

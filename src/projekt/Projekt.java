@@ -103,7 +103,7 @@ public class Projekt extends AbstractOpenGLBase {
 		modelMatrix = new Matrix4f();
 		modelMatrix.scale(2);
 		modelMatrix.rotateX(angle);
-		modelMatrix.translate(-15,10,-30);
+		modelMatrix.translate(-15,100,-30);
 		vaos.get(1).updateModel(modelMatrix);
 
 /*
