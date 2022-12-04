@@ -1,6 +1,5 @@
 package projekt;
 
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 
 //Alle Operationen ändern das Matrixobjekt selbst und geben das eigene Matrixobjekt zurück
 //Dadurch kann man Aufrufe verketten, z.B.
