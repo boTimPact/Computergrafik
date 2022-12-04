@@ -11,7 +11,6 @@ public class VAO {
     public int location;
     public Mesh mesh;
     public Matrix4f modelMatrix;
-    public int vboIndices;
 
 
     public VAO(Mesh mesh, Matrix4f model){
@@ -40,8 +39,8 @@ public class VAO {
         glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(1);
 
-        this.vboIndices = glGenBuffers();
+        int vboIndices = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.indices.clone(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.indices, GL_STATIC_DRAW);
     }
 }

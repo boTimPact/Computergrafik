@@ -22,13 +22,12 @@ public class Mesh {
                 new Vector3f(-1, 0, -1)
         };
         indices = new int[]{
-                1, 2, 3,
-                1, 4, 5,
-                1, 3, 4,
-                1, 5, 2,
-                3, 2, 4,
-                5, 4, 2,
-                0
+                0, 1, 2,
+                0, 3, 4,
+                0, 2, 3,
+                0, 4, 1,
+                2, 1, 3,
+                4, 3, 1
         };
 
         color = new Vector3f[]{
@@ -52,11 +51,10 @@ public class Mesh {
         };
 
         indices = new int[]{
-                1,2,3,
-                1,4,2,
-                1,3,4,
-                4,3,2,
-                0
+                0,1,2,
+                0,3,1,
+                0,2,3,
+                3,2,1
         };
 
         color = new Vector3f[]{
@@ -77,9 +75,8 @@ public class Mesh {
         };
 
         indices = new int[]{
-                1,2,0,
-                1,2,3,
-                0
+                0,1,2,
+                1,3,2
         };
 
         color = new Vector3f[]{
@@ -120,9 +117,7 @@ public class Mesh {
                 6,7,5,
 
                 1,2,0,  //unten
-                1,3,2,
-
-                0       //TODO: Prof fragen warum dies geht aber +1 in glDrawElements nicht
+                1,3,2
         };
 
         color = new Vector3f[]{
@@ -151,22 +146,22 @@ public class Mesh {
 
     }
 
-    public Mesh(int vLength, int iLength){
+    public Mesh(int vLength, int iLength, Vector3f col){
         this.vertices = new Vector3f[vLength];
         this.indices = new int[iLength];
-        this.color = new Vector3f[vLength];
-        Arrays.fill(color,new Vector3f(1,1,1));
+        this.color = new Vector3f[vertices.length];
+        Arrays.fill(color, col);        //for static coloring
     }
 
     public float[] vtoArray(){
         float out[] = new float[this.vertices.length * 3];
         int index = 0;
-        for (int i = 0; i < vertices.length; i++) {
-            out[index] = vertices[i].x;
+        for (Vector3f vertex : vertices) {
+            out[index] = vertex.x;
             index++;
-            out[index] = vertices[i].y;
+            out[index] = vertex.y;
             index++;
-            out[index] = vertices[i].z;
+            out[index] = vertex.z;
             index++;
         }
         return out;
@@ -175,12 +170,12 @@ public class Mesh {
     public float[] ctoArray(){
         float out[] = new float[this.color.length * 3];
         int index = 0;
-        for (int i = 0; i < color.length; i++) {
-            out[index] = color[i].x;
+        for (Vector3f vector3f : color) {
+            out[index] = vector3f.x;
             index++;
-            out[index] = color[i].y;
+            out[index] = vector3f.y;
             index++;
-            out[index] = color[i].z;
+            out[index] = vector3f.z;
             index++;
         }
         return out;
