@@ -72,47 +72,23 @@ public class Projekt extends AbstractOpenGLBase {
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
 
-		modelMatrix = new Matrix4f();
-		modelMatrix.rotateX(angle);
-		modelMatrix.rotateY(angle);
-		modelMatrix.rotateZ(angle/2);
-		modelMatrix.translate(offset,0,-15);
+		modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(angle/2).translate(offset,0,-15);
 		vaos.get(0).updateModel(modelMatrix);
 
 /*
-		modelMatrix = new Matrix4f();
-		modelMatrix.rotateZ(-angle);
-		//modelMatrix.translate(0,0,-4);
-		modelMatrix.rotateX(angle / 2);
-		modelMatrix.rotateY(angle * 2);
-		modelMatrix.translate(4,2,-10);
+		modelMatrix = new Matrix4f().rotateX(angle / 2).rotateY(angle * 2).rotateZ(-angle).translate(4,2,-10);
 		vaos.get(1).updateModel(modelMatrix);
 
 
-		modelMatrix= new Matrix4f();
-		modelMatrix.scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)));
-		modelMatrix.translate(0,8f,0);
-		modelMatrix.rotateZ(angle/2);
-		modelMatrix.translate(0,-8f,0);
-		modelMatrix.rotateX(angle/4);
-		modelMatrix.rotateY(-angle);
-		modelMatrix.translate(-3,0,-25);
+		modelMatrix= new Matrix4f().translate(0,8f,0).rotateZ(angle/2).translate(0,-8f,0).rotateX(angle/4).rotateY(-angle).scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2))).translate(-3,0,-25);
 		vaos.get(2).updateModel(modelMatrix);
-
 */
-		modelMatrix = new Matrix4f();
-		modelMatrix.scale(2);
-		modelMatrix.rotateX(angle);
-		modelMatrix.translate(-15,100,-30);
+
+		modelMatrix = new Matrix4f().scale(2).rotateX(angle).translate(-15,100,-30);
 		vaos.get(1).updateModel(modelMatrix);
 
 /*
-		modelMatrix = new Matrix4f();
-		modelMatrix.rotateY(angle/5);
-		modelMatrix.rotateZ(angle/10);
-		modelMatrix.rotateX(angle);
-		modelMatrix.scale(2);
-		modelMatrix.translate(-6, 2,-15);
+		modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle/5).rotateZ(angle/10).scale(2).translate(-6, 2,-15);
 		vaos.get(1).updateModel(modelMatrix);
 */
 
