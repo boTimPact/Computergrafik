@@ -62,7 +62,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 
 		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
-		projectionMatrix = new Matrix4f(1, 100, 1.777f,1);
+		projectionMatrix = new Matrix4f(1, 500, 1.777f,1);
 
 		locMatrices[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix");
 		locMatrices[1] = glGetUniformLocation(shaderProgram.getId(), "viewMatrix");
@@ -82,7 +82,7 @@ public class Projekt extends AbstractOpenGLBase {
 		// Transformation durchführen (Matrix anpassen)
 
 		//Cube
-		modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).translate(offset,offset,-15);
+		modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).translate(0,-5,-15);
 		vaos.get(0).updateModel(modelMatrix);
 
 		//Pyramide
@@ -98,11 +98,11 @@ public class Projekt extends AbstractOpenGLBase {
 		vaos.get(3).updateModel(modelMatrix);
 
 		//File 1
-		modelMatrix = new Matrix4f().rotateX((float)Math.toRadians(0)).rotateY(angle).rotateZ(0).scale(1).translate(30, -10,-60);
+		modelMatrix = new Matrix4f().rotateX((float)Math.toRadians(0)).rotateY(-angle).rotateZ(0).scale(1).translate(30, -10,-60);
 		vaos.get(4).updateModel(modelMatrix);
 
 		//File 2
-		modelMatrix = new Matrix4f().scale(4).translate(-10, 5, -50);
+		modelMatrix = new Matrix4f().rotateY(angle).translate(0,4,0).rotateX(angle/2).translate(0,-4,0).scale(4).translate(-40, 30, -100);
 		vaos.get(5).updateModel(modelMatrix);
 
 		//File 3
