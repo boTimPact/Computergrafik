@@ -41,6 +41,6 @@ public class VAO {
 
         int vboIndices = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.indicesVertices, GL_STATIC_DRAW);
     }
 }

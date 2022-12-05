@@ -39,7 +39,7 @@ public class Matrix4f {
 		this.matrix[3][2] = -1;
 	}
 
-	public Matrix4f(Vector3f pos, Vector3f u, Vector3f v, Vector3f n){
+	public Matrix4f(VectorF pos, VectorF u, VectorF v, VectorF n){
 		this.matrix[0] = new float[]{u.x, u.y, u.z, -pos.x};
 		this.matrix[1] = new float[]{v.x, v.y, v.z, -pos.y};
 		this.matrix[2] = new float[]{n.x, n.y, n.z, -pos.z};

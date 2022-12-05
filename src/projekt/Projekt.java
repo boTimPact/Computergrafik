@@ -46,16 +46,16 @@ public class Projekt extends AbstractOpenGLBase {
 		this.vaos.add(new VAO(plane, new Matrix4f()));
 
 
-		OBJFileReader reader = new OBJFileReader(new Vector3f(1,1,1));
+		OBJFileReader reader = new OBJFileReader(new VectorF(1,1,1));
 		Mesh readFromFile = reader.readFile("src/res/MiniBike.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 
-		reader = new OBJFileReader(new Vector3f(0,0,1));
+		reader = new OBJFileReader(new VectorF(0,0,1));
 		readFromFile = reader.readFile("src/res/Ball.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
-		reader = new OBJFileReader(new Vector3f(1,1,0));
+		reader = new OBJFileReader(new VectorF(1,1,0));
 		readFromFile = reader.readFile("src/res/Ball.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
@@ -98,7 +98,7 @@ public class Projekt extends AbstractOpenGLBase {
 		vaos.get(3).updateModel(modelMatrix);
 
 		//File 1
-		modelMatrix = new Matrix4f().rotateX((float)Math.toRadians(0)).rotateY(-angle).rotateZ(0).scale(1).translate(30, -10,-60);
+		modelMatrix = new Matrix4f().rotateX((float)Math.toRadians(0)).rotateY(-angle).scale(2).translate(30, -10,-60);
 		vaos.get(4).updateModel(modelMatrix);
 
 		//File 2
@@ -131,7 +131,7 @@ public class Projekt extends AbstractOpenGLBase {
 		for (VAO tmp : this.vaos) {
 			glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
 			glBindVertexArray(tmp.location);
-			glDrawElements(GL_TRIANGLES, tmp.mesh.indices.length, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
 		}
 	}
 

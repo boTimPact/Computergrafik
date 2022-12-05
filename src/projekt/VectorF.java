@@ -1,19 +1,24 @@
 package projekt;
 
-public class Vector3f {
+public class VectorF {
     public float x;
     public float y;
     public float z;
     public float w;
 
-    public Vector3f(float x, float y, float z) {
+    public VectorF(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
+    public VectorF(float x, float y){
+        this.x = x;
+        this.y = y;
+    }
 
-    public Vector3f(float x, float y, float z, float w) {
+
+    public VectorF(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
