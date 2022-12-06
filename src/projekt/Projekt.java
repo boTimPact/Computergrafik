@@ -7,19 +7,18 @@ import static org.lwjgl.opengl.GL30.*;
 import lenz.opengl.AbstractOpenGLBase;
 import lenz.opengl.ShaderProgram;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
 
 public class Projekt extends AbstractOpenGLBase {
 	private ShaderProgram shaderProgram;
-	private List<Integer> vaos = new ArrayList<>();
-	private Matrix4 modelMatrixPyramide;
-	private Matrix4 modelMatrixTetraeder;
-	private Matrix4 modelMatrixPlane;
-	private Matrix4 modelMatrixReading;
-	private Matrix4 projectionMatrix;
-	private Matrix4 viewMatrix;
-	private int loc[] = new int[3];
+	private List<VAO> vaos = new LinkedList<>();
+	Camera camera = new Camera();
+	private Matrix4f projectionMatrix;
+	private Matrix4f viewMatrix;
+	private Matrix4f modelMatrix;
+	private int locMatrices[] = new int[3];
 
 	public static void main(String[] args) {
 		new Projekt().start("CG Projekt", 1920, 1080);
@@ -30,39 +29,49 @@ public class Projekt extends AbstractOpenGLBase {
 		shaderProgram = new ShaderProgram("projekt");
 		glUseProgram(shaderProgram.getId());
 
+		Mesh cube = new Mesh('A');
+		this.vaos.add(new VAO(cube, new Matrix4f()));
+
 		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
-		Figure pyramide = new Figure(1);
-		this.vaos.add(glGenVertexArrays());
-		glBindVertexArray(vaos.get(vaos.size() - 1));
-		createVBO(pyramide.vertices,3,0);
-		createVBO(pyramide.color, 3,1);
-
-		Figure tetraeder = new Figure(1f);
-		this.vaos.add(glGenVertexArrays());
-		glBindVertexArray(vaos.get(vaos.size() - 1));
-		createVBO(tetraeder.vertices,3,0);
-		createVBO(tetraeder.color, 3,1);
+		Mesh pyramide = new Mesh(1);
+		this.vaos.add(new VAO(pyramide, new Matrix4f()));
 
 
-		Figure plane = new Figure(0.);
-		this.vaos.add(glGenVertexArrays());
-		glBindVertexArray(vaos.get(vaos.size() - 1));
-		createVBO(plane.vertices,3,0);
-		createVBO(plane.color, 3,1);
-
-		Figure readFromFile = new Figure("src/res/House.obj");
-		this.vaos.add(glGenVertexArrays());
-		glBindVertexArray(vaos.get(vaos.size() - 1));
-		createVBO(readFromFile.vertices,3,0);
-		createVBO(readFromFile.color, 3,1);
+		Mesh tetraeder = new Mesh(1f);
+		this.vaos.add(new VAO(tetraeder, new Matrix4f()));
 
 
-		projectionMatrix = new Matrix4(1, 150, 1.777f,1);
-		loc[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix1");
-		loc[1] = glGetUniformLocation(shaderProgram.getId(), "projectionMatrix");
+
+		Mesh plane = new Mesh(0.);
+		this.vaos.add(new VAO(plane, new Matrix4f()));
+
+
+		OBJFileReader reader = new OBJFileReader(new VectorF(1,1,1));
+		Mesh readFromFile = reader.readFile("src/res/MiniBike.obj");
+		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+
+
+		reader = new OBJFileReader(new VectorF(0,0,1));
+		readFromFile = reader.readFile("src/res/Ball.obj");
+		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+
+		reader = new OBJFileReader(new VectorF(1,1,0));
+		readFromFile = reader.readFile("src/res/Ball.obj");
+		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+
+
+
+		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
+		projectionMatrix = new Matrix4f(1, 500, 1.777f,1);
+
+		locMatrices[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix");
+		locMatrices[1] = glGetUniformLocation(shaderProgram.getId(), "viewMatrix");
+		locMatrices[2] = glGetUniformLocation(shaderProgram.getId(), "projectionMatrix");
 
 		glEnable(GL_DEPTH_TEST); // z-Buffer aktivieren
 		glEnable(GL_CULL_FACE); // backface culling aktivieren
+		//glFrontFace(GL_CW);	// check when clockwise vertex configuration
+		//glCullFace(GL_BACK);
 	}
 
 	float angle = 0;
@@ -71,39 +80,41 @@ public class Projekt extends AbstractOpenGLBase {
 	@Override
 	public void update() {
 		// Transformation durchführen (Matrix anpassen)
-		modelMatrixPyramide = new Matrix4();
-		modelMatrixPyramide.rotateZ(-angle);
-		//modelMatrix.translate(0,0,-4);
-		modelMatrixPyramide.rotateX(angle / 2);
-		modelMatrixPyramide.rotateY(angle * 2);
-		modelMatrixPyramide.translate(2,1,-5);
 
-		modelMatrixTetraeder = new Matrix4();
-		//modelMatrixTetraeder.scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)));
-		modelMatrixTetraeder.translate(0,8f,0);
-		modelMatrixTetraeder.rotateZ(angle/2);
-		modelMatrixTetraeder.translate(0,-8f,0);
-		modelMatrixTetraeder.rotateX(angle/4);
-		modelMatrixTetraeder.rotateY(-angle);
-		modelMatrixTetraeder.translate(-5,0,-10);
+		//Cube
+		modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).translate(0,-5,-15);
+		vaos.get(0).updateModel(modelMatrix);
 
-		modelMatrixPlane = new Matrix4();
-		modelMatrixPlane.scale(200,0,100);
-		//modelMatrixPlane.rotateX((float)(Math.toRadians(90)));
-		modelMatrixPlane.translate(0,-15,-20);
+		//Pyramide
+		modelMatrix = new Matrix4f().rotateX(angle / 2).rotateY(angle * 2).rotateZ(-angle).translate(4,2,-10);
+		vaos.get(1).updateModel(modelMatrix);
 
-		modelMatrixReading = new Matrix4();
-		modelMatrixReading.rotateY(angle/5);
-		modelMatrixReading.rotateZ(angle/10);
-		modelMatrixReading.rotateX(angle);
-		modelMatrixReading.scale(2);
+		//Tetraeder
+		modelMatrix= new Matrix4f().translate(0,8f,0).rotateZ(angle/2).translate(0,-8f,0).rotateX(angle/4).rotateY(-angle).scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2))).translate(-3,0,-25);
+		vaos.get(2).updateModel(modelMatrix);
 
-		modelMatrixReading.translate(offset, 0,-15);
+		//Plane
+		modelMatrix = new Matrix4f().scale(1000).rotateX((float)Math.toRadians(-90)).translate(0,-20,-10);
+		vaos.get(3).updateModel(modelMatrix);
 
+		//File 1
+		modelMatrix = new Matrix4f().rotateX((float)Math.toRadians(0)).rotateY(-angle).scale(2).translate(30, -10,-60);
+		vaos.get(4).updateModel(modelMatrix);
+
+		//File 2
+		modelMatrix = new Matrix4f().rotateY(angle).translate(0,4,0).rotateX(angle/2).translate(0,-4,0).scale(4).translate(-40, 30, -100);
+		vaos.get(5).updateModel(modelMatrix);
+
+		//File 3
+		modelMatrix = new Matrix4f().translate(6,0,0).rotateY(angle).multiply(modelMatrix);
+		vaos.get(6).updateModel(modelMatrix);
+
+		//camera.pos.multiplyMatrix(new Matrix4f().translate(0,offset/100,0));
+		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
 
 		angle += 0.01;
 		offset += delta;
-		if(offset > 10 || offset < -10){
+		if(offset > 6.5 || offset < -6.5){
 			delta *= -1;
 		}
 	}
@@ -114,35 +125,17 @@ public class Projekt extends AbstractOpenGLBase {
 
 		// Matrix an Shader übertragen
 		// VAOs zeichnen
-		// TODO: eigene Klasse für VAOs sodass ich die länge automatisch lesen kann und nicht per hand eingeben muss -> glDrawArrays()
-		glUniformMatrix4fv(loc[0],false, modelMatrixPyramide.getValuesAsArray());
-		glUniformMatrix4fv(loc[1], false, projectionMatrix.getValuesAsArray());
-		glBindVertexArray(this.vaos.get(0));
-		glDrawArrays(GL_TRIANGLES, 0, 18);
+		glUniformMatrix4fv(locMatrices[1], false, viewMatrix.getValuesAsArray());
+		glUniformMatrix4fv(locMatrices[2], false, projectionMatrix.getValuesAsArray());
 
-		glUniformMatrix4fv(loc[0], false, modelMatrixTetraeder.getValuesAsArray());
-		glBindVertexArray(this.vaos.get(1));
-		glDrawArrays(GL_TRIANGLES, 0, 18);
-
-		glUniformMatrix4fv(loc[0], false, modelMatrixPlane.getValuesAsArray());
-		glBindVertexArray(this.vaos.get(2));
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glUniformMatrix4fv(loc[0], false, modelMatrixReading.getValuesAsArray());
-		glBindVertexArray(this.vaos.get(3));
-		glDrawArrays(GL_TRIANGLES, 0, 42);
+		for (VAO tmp : this.vaos) {
+			glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
+			glBindVertexArray(tmp.location);
+			glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
+		}
 	}
 
 	@Override
 	public void destroy() {
-	}
-
-	public void createVBO(float[] input, int size, int index){
-		int vbo = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-		glBufferData(GL_ARRAY_BUFFER, input,GL_STATIC_DRAW);
-		glVertexAttribPointer(index,size,GL_FLOAT, false, 0,0);
-		glEnableVertexAttribArray(index);
 	}
 }

@@ -5,17 +5,28 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OBJFileReader{
-    private List<Vector3> vertices = new LinkedList<>();
-    private List<Integer> indices = new LinkedList<>();
-    private float out[];
+    private List<VectorF> vertices = new LinkedList<>();
+    private List<VectorF> normals = new LinkedList<>();
+    private List<VectorF> textures = new LinkedList<>();
 
-    public float[] readFile(String path){
+    private List<Integer> indicesVertices = new LinkedList<>();
+    private List<Integer> indicesNormals = new LinkedList<>();
+    private List<Integer> indicesTextures = new LinkedList<>();
+    private float out[];
+    private VectorF color;     //for static coloring
+
+
+    public OBJFileReader(VectorF col){     //for static coloring
+        this.color = col;
+    }
+
+
+
+    public Mesh readFile(String path){
 
         File file = new File(path);
         BufferedReader reader;
@@ -26,18 +37,45 @@ public class OBJFileReader{
 
             while (line != null) {
                 String parts[] = line.split(" ");
-                if(parts[0].equals("v")){                   // v = vertex, vt = Texturkoordinaten, vn = Normale, f = Fläche,
-                    vertices.add(new Vector3(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3])));
+                if(parts[0].equals("v")){                   // v = vertex, vt = Texturkoordinaten, vn = Normale, f = Fläche (f v/vt/vn),
+                    vertices.add(new VectorF(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3])));
                     }
+                if(parts[0].equals("vn")){
+                    normals.add(new VectorF(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3])));
+                }
+                if(parts[0].equals("vt")){
+                    textures.add(new VectorF(Float.valueOf(parts[1]), Float.valueOf(parts[2])));
+                }
                 if(parts[0].equals("f")){
-                    indices.add(Integer.valueOf(parts[1].charAt(0)) - 48);
-                    indices.add(Integer.valueOf(parts[2].charAt(0)) - 48);
-                    indices.add(Integer.valueOf(parts[3].charAt(0)) - 48);
+                    for (int i = 1; i < parts.length; i++) {
+                        if(parts[1].contains("/")){
+                            String split[] = parts[i].split("/");
+                            indicesVertices.add(Integer.valueOf(split[0]) - 1);
+                            if(normals.size()!= 0 ) {
+                                indicesNormals.add(Integer.valueOf(split[1]) - 1);
+                                indicesTextures.add(Integer.valueOf(split[2]) - 1);
+                            }else {
+                                indicesTextures.add(Integer.valueOf(split[1]) - 1);
+                            }
+
+                        }
+                        //if only vertices are saved in .obj file
+                        else {
+                            indicesVertices.add(Integer.valueOf(parts[i]) - 1);
+                        }
+                    }
                 }
                 // read next line
                 line = reader.readLine();
             }
-
+/*
+            for (int i = 0; i < vertices.size(); i++) {
+                System.out.println(vertices.get(i).x + " " + vertices.get(i).y + " " + vertices.get(i).z);
+            }
+            for (int i = 0; i + 3 < indices.size(); i+=3) {
+                System.out.println(indices.get(i) + " " + indices.get(i+1) + " " + indices.get(i+2));
+            }
+*/
             reader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -45,17 +83,25 @@ public class OBJFileReader{
             e.printStackTrace();
         }
 
-        List<Float> tmp = new LinkedList<>();
-        for (int i = 0; i < indices.size(); i++) {
-            float vecToArr[] = new float[3];
-            vertices.get(indices.get(i)-1).addToArr(vecToArr);
-            for (int j = 0; j < 3; j++) {
-                tmp.add(vecToArr[j]);
-            }
+        Mesh out = new Mesh(vertices.size(), indicesVertices.size(), normals.size(), indicesNormals.size(), textures.size(), indicesTextures.size(), color);        //color only for static coloring
+
+        for (int i = 0; i < out.vertices.length; i++) {
+            out.vertices[i] = this.vertices.get(i);
         }
-        out = new float[tmp.size()];
-        for (int i = 0; i < tmp.size(); i++) {
-            out[i] = tmp.get(i).floatValue();
+        for (int i = 0; i < out.normals.length; i++) {
+            out.normals[i] = this.normals.get(i);
+        }
+        for (int i = 0; i < out.textures.length; i++) {
+            out.textures[i] = this.textures.get(i);
+        }
+        for (int i = 0; i < out.indicesVertices.length; i++) {
+            out.indicesVertices[i] = this.indicesVertices.get(i);
+            if(i < out.indicesNormals.length) {
+                out.indicesNormals[i] = this.indicesNormals.get(i);
+            }
+            if(i < out.indicesTextures.length) {
+                out.indicesTextures[i] = this.indicesTextures.get(i);
+            }
         }
 
         return out;
