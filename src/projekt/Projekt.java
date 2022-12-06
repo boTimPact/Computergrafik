@@ -1,11 +1,16 @@
 package projekt;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import projekt.input.CursorInput;
+import projekt.input.KeyboardInput;
 import lenz.opengl.AbstractOpenGLBase;
 import lenz.opengl.ShaderProgram;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +25,9 @@ public class Projekt extends AbstractOpenGLBase {
 	private Matrix4f modelMatrix;
 	private int locMatrices[] = new int[3];
 
+	private GLFWKeyCallback keyCallback;
+	private GLFWCursorPosCallback cursorPos;
+
 	public static void main(String[] args) {
 		new Projekt().start("CG Projekt", 1920, 1080);
 	}
@@ -28,6 +36,10 @@ public class Projekt extends AbstractOpenGLBase {
 	protected void init() {
 		shaderProgram = new ShaderProgram("projekt");
 		glUseProgram(shaderProgram.getId());
+
+		glfwSetKeyCallback(this.getWindow(), keyCallback = new KeyboardInput());
+		glfwSetCursorPosCallback(this.getWindow(), cursorPos = new CursorInput());
+		glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);		//https://stackoverflow.com/questions/36951925/java-lwjgl-how-to-make-the-mouse-invisible
 
 		Mesh cube = new Mesh('A');
 		this.vaos.add(new VAO(cube, new Matrix4f()));
@@ -60,7 +72,6 @@ public class Projekt extends AbstractOpenGLBase {
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 
-
 		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
 		projectionMatrix = new Matrix4f(1, 500, 1.777f,1);
 
@@ -77,45 +88,81 @@ public class Projekt extends AbstractOpenGLBase {
 	float angle = 0;
 	float offset = 0;
 	float delta = 0.05f;
+
+	int timerMenu = 0;
+	int timerPause = 0;
+	boolean isInMenu = false;
+	boolean isPaused = false;
 	@Override
 	public void update() {
-		// Transformation durchführen (Matrix anpassen)
 
-		//Cube
-		modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).translate(0,-5,-15);
-		vaos.get(0).updateModel(modelMatrix);
+		if(timerMenu >= 15) {
+			if (KeyboardInput.keys[GLFW_KEY_ESCAPE]) {
+				//System.out.println("Escape pressed");
+				if (isInMenu) {
+					glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+					isInMenu = false;
+				}else{
+					glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+					isInMenu = true;
+				}
+			}
+			timerMenu = 0;
+		}
+		timerMenu++;
 
-		//Pyramide
-		modelMatrix = new Matrix4f().rotateX(angle / 2).rotateY(angle * 2).rotateZ(-angle).translate(4,2,-10);
-		vaos.get(1).updateModel(modelMatrix);
+		if(timerPause >= 15){
+			if(KeyboardInput.keys[GLFW_KEY_P]){
+				if(isPaused){
+					isPaused = false;
+				}else {
+					isPaused = true;
+				}
+			}
+			timerPause = 0;
+		}
+		timerPause++;
 
-		//Tetraeder
-		modelMatrix= new Matrix4f().translate(0,8f,0).rotateZ(angle/2).translate(0,-8f,0).rotateX(angle/4).rotateY(-angle).scale((float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2)),(float)(2*(Math.sin(angle)+2))).translate(-3,0,-25);
-		vaos.get(2).updateModel(modelMatrix);
 
-		//Plane
-		modelMatrix = new Matrix4f().scale(1000).rotateX((float)Math.toRadians(-90)).translate(0,-20,-10);
-		vaos.get(3).updateModel(modelMatrix);
+		if(!isPaused) {
+			// Transformation durchführen (Matrix anpassen)
 
-		//File 1
-		modelMatrix = new Matrix4f().rotateX((float)Math.toRadians(0)).rotateY(-angle).scale(2).translate(30, -10,-60);
-		vaos.get(4).updateModel(modelMatrix);
+			//Cube
+			modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).translate(0, -5, -15);
+			vaos.get(0).updateModel(modelMatrix);
 
-		//File 2
-		modelMatrix = new Matrix4f().rotateY(angle).translate(0,4,0).rotateX(angle/2).translate(0,-4,0).scale(4).translate(-40, 30, -100);
-		vaos.get(5).updateModel(modelMatrix);
+			//Pyramide
+			modelMatrix = new Matrix4f().rotateX(angle / 2).rotateY(angle * 2).rotateZ(-angle).translate(4, 2, -10);
+			vaos.get(1).updateModel(modelMatrix);
 
-		//File 3
-		modelMatrix = new Matrix4f().translate(6,0,0).rotateY(angle).multiply(modelMatrix);
-		vaos.get(6).updateModel(modelMatrix);
+			//Tetraeder
+			modelMatrix = new Matrix4f().translate(0, 8f, 0).rotateZ(angle / 2).translate(0, -8f, 0).rotateX(angle / 4).rotateY(-angle).scale((float) (2 * (Math.sin(angle) + 2)), (float) (2 * (Math.sin(angle) + 2)), (float) (2 * (Math.sin(angle) + 2))).translate(-3, 0, -25);
+			vaos.get(2).updateModel(modelMatrix);
 
-		//camera.pos.multiplyMatrix(new Matrix4f().translate(0,offset/100,0));
-		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
+			//Plane
+			modelMatrix = new Matrix4f().scale(1000).rotateX((float) Math.toRadians(-90)).translate(0, -20, -10);
+			vaos.get(3).updateModel(modelMatrix);
 
-		angle += 0.01;
-		offset += delta;
-		if(offset > 6.5 || offset < -6.5){
-			delta *= -1;
+			//File 1
+			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(0)).rotateY(-angle).scale(2).translate(30, -10, -60);
+			vaos.get(4).updateModel(modelMatrix);
+
+			//File 2
+			modelMatrix = new Matrix4f().rotateY(angle).translate(0, 4, 0).rotateX(angle / 2).translate(0, -4, 0).scale(4).translate(-40, 30, -100);
+			vaos.get(5).updateModel(modelMatrix);
+
+			//File 3
+			modelMatrix = new Matrix4f().translate(6, 0, 0).rotateY(angle).multiply(modelMatrix);
+			vaos.get(6).updateModel(modelMatrix);
+
+			camera.move().rotate();
+			viewMatrix = camera.view;	//new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
+
+			angle += 0.01;
+			offset += delta;
+			if (offset > 6.5 || offset < -6.5) {
+				delta *= -1;
+			}
 		}
 	}
 

@@ -30,4 +30,13 @@ public class VectorF {
         this.y = matrix.matrix[1][0] * this.x + matrix.matrix[1][1] * this.y + matrix.matrix[1][2] * this.z + matrix.matrix[1][3] * w;
         this.z = matrix.matrix[2][0] * this.x + matrix.matrix[2][1] * this.y + matrix.matrix[2][2] * this.z + matrix.matrix[2][3] * w;
     }
+
+    public VectorF cross(VectorF other){
+        VectorF out = new VectorF(1,1,1);
+        out.x = this.y * other.z - this.z * other.y;
+        out.y = this.z * other.x - this.x * other.z;
+        out.z = this.x * other.y - this.y * other.z;
+
+        return out;
+    }
 }
