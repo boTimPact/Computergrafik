@@ -73,7 +73,7 @@ public class Projekt extends AbstractOpenGLBase {
 		readFromFile = reader.readFile("src/res/Ball.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
-		reader = new OBJFileReader(new VectorF(0.124f, 0.137f, 0.561f));
+		reader = new OBJFileReader(new VectorF(0.7f, 0.524f, 0.083f));
 		readFromFile = reader.readFile("src/res/MenuWriting.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
@@ -171,7 +171,7 @@ public class Projekt extends AbstractOpenGLBase {
 			vaos.get(6).updateModel(modelMatrix);
 
 			//File 4
-			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(90)).translate(-5, 5, -15);
+			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(80)).translate(-5, 5, -15);	//TODO: Fragen wie man ein Objekt relativ zur Camaera bewegen kann
 			vaos.get(7).updateModel(modelMatrix);
 
 			angle += 0.01;

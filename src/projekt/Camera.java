@@ -11,8 +11,8 @@ public class Camera {
     public VectorF u = new VectorF(1,0,0);
     public VectorF v = new VectorF(0,1,0);
     public VectorF n = new VectorF(0,0,1);
-    private float camPosX = (float) CursorInput.xPos;
-    private float camPosY = (float) CursorInput.yPos;
+    private float camPosX = 0;
+    private float camPosY = 0;
 
     public Matrix4f view = new Matrix4f(pos, u, v, n);
 
@@ -53,7 +53,7 @@ public class Camera {
         camPosX = posX;
         camPosY = posY;
 
-        view.rotateVector(u.normalize(), deltaY).rotateVector(new VectorF(0,1,0), deltaX);
+        view.rotateVector(u.normalize(), deltaY).rotateVector(new VectorF(0,1,0), deltaX);      //TODO: Fragen Camerarotation funktioniert
 
         return this;
     }
