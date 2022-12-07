@@ -73,10 +73,18 @@ public class Projekt extends AbstractOpenGLBase {
 		readFromFile = reader.readFile("src/res/Ball.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
+
 		reader = new OBJFileReader(new VectorF(0.7f, 0.524f, 0.083f));
 		readFromFile = reader.readFile("src/res/MenuWriting.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
+
+/*
+		//Test for Lighting
+		OBJFileReader reader = new OBJFileReader(new VectorF(1,1,1));
+		Mesh readFromFile = reader.readFile("src/res/Cube.obj");
+		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+*/
 
 		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
 		projectionMatrix = new Matrix4f(1, 500, 1.777f,1);
@@ -171,8 +179,15 @@ public class Projekt extends AbstractOpenGLBase {
 			vaos.get(6).updateModel(modelMatrix);
 
 			//File 4
-			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(80)).translate(-5, 5, -15);	//TODO: Fragen wie man ein Objekt relativ zur Camaera bewegen kann
+			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(80)).translate(-5, 5, -15);
 			vaos.get(7).updateModel(modelMatrix);
+
+
+/*
+			//Matrix for Testing
+			modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).scale(4).translate(0, 0, -8);
+			vaos.get(0).updateModel(modelMatrix);
+*/
 
 			angle += 0.01;
 			offset += delta;
@@ -180,6 +195,7 @@ public class Projekt extends AbstractOpenGLBase {
 				delta *= -1;
 			}
 		}
+
 		if(isStarted) {
 			if (!isInMenu) {
 				viewMatrix = camera.move().rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
@@ -211,6 +227,15 @@ public class Projekt extends AbstractOpenGLBase {
 			glBindVertexArray(tmp.location);
 			glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
 		}
+/*
+		//for Cube testing
+		for (int i = 0; i < vaos.size(); i++) {
+			VAO tmp = vaos.get(i);
+			glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
+			glBindVertexArray(tmp.location);
+			glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
+		}
+ */
 	}
 
 	@Override

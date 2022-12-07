@@ -29,7 +29,7 @@ public class VAO {
     public void bindVBOs(){
         int vboVertex = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboVertex);
-        glBufferData(GL_ARRAY_BUFFER, mesh.vtoArray(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, mesh.vArrToArr(this.mesh.vertices), GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(0);
 
@@ -38,6 +38,12 @@ public class VAO {
         glBufferData(GL_ARRAY_BUFFER, mesh.ctoArray(), GL_STATIC_DRAW);
         glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(1);
+
+        int vboNormals = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
+        glBufferData(GL_ARRAY_BUFFER, mesh.vArrToArr(this.mesh.vertices), GL_STATIC_DRAW);
+        glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(2);
 
         int vboIndices = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);

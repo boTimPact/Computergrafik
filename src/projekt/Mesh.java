@@ -83,11 +83,18 @@ public class Mesh {
                 1,3,2
         };
 
+        normals = new VectorF[]{
+                new VectorF(0,0,1),
+                new VectorF(0,0,1),
+                new VectorF(0,0,1),
+                new VectorF(0,0,1),
+        };
+
         color = new VectorF[]{
-                new VectorF(0.2f,0.2f,0.23f),
-                new VectorF(0.2f,0.2f,0.23f),
-                new VectorF(0.2f,0.2f,0.23f),
-                new VectorF(0.2f,0.2f,0.23f)
+                new VectorF(0.2f,1f,0.23f),
+                new VectorF(0.2f,1f,0.23f),
+                new VectorF(0.2f,0.4f,0.23f),
+                new VectorF(0.2f,0.4f,0.23f)
         };
     }
 
@@ -138,13 +145,13 @@ public class Mesh {
 
 
                 new VectorF(1,0,0),
-                new VectorF(0,1,0),
+                new VectorF(1,0,0),
                 new VectorF(0,0,1),
+                new VectorF(0,0,1),
+                new VectorF(0,1,0),
+                new VectorF(0,1,0),
                 new VectorF(1,1,1),
-                new VectorF(1,1,0),
-                new VectorF(1,0,1),
-                new VectorF(0,1,1),
-                new VectorF(0.5f,0.5f,0.5f)
+                new VectorF(1,1,1)
 
         };
 
@@ -159,12 +166,25 @@ public class Mesh {
         this.indicesTextures = new int[iTLength];
         this.color = new VectorF[vertices.length];
         Arrays.fill(color, col);        //for static coloring
+        /*
+        //for Color for Cube Testing
+        color = new VectorF[]{
+                new VectorF(1, 0, 0),
+                new VectorF(0, 1, 0),
+                new VectorF(0, 0, 1),
+                new VectorF(1, 1, 1),
+                new VectorF(1, 1, 0),
+                new VectorF(1, 0, 1),
+                new VectorF(0, 1, 1),
+                new VectorF(0.5f, 0.5f, 0.5f)
+        };
+        */
     }
 
-    public float[] vtoArray(){
-        float out[] = new float[this.vertices.length * 3];
+    public float[] vArrToArr(VectorF arr[]){
+        float out[] = new float[arr.length * 3];
         int index = 0;
-        for (VectorF vertex : vertices) {
+        for (VectorF vertex : arr) {
             out[index] = vertex.x;
             index++;
             out[index] = vertex.y;
