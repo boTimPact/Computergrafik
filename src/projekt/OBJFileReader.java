@@ -38,30 +38,30 @@ public class OBJFileReader{
             while (line != null) {
                 String parts[] = line.split(" ");
                 if(parts[0].equals("v")){                   // v = vertex, vt = Texturkoordinaten, vn = Normale, f = Fläche (f v/vt/vn),
-                    vertices.add(new VectorF(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3])));
+                    vertices.add(new VectorF(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]), Float.parseFloat(parts[3])));
                     }
                 if(parts[0].equals("vn")){
-                    normals.add(new VectorF(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3])));
+                    normals.add(new VectorF(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]), Float.parseFloat(parts[3])));
                 }
                 if(parts[0].equals("vt")){
-                    textures.add(new VectorF(Float.valueOf(parts[1]), Float.valueOf(parts[2])));
+                    textures.add(new VectorF(Float.parseFloat(parts[1]), Float.parseFloat(parts[2])));
                 }
                 if(parts[0].equals("f")){
                     for (int i = 1; i < parts.length; i++) {
                         if(parts[1].contains("/")){
                             String split[] = parts[i].split("/");
-                            indicesVertices.add(Integer.valueOf(split[0]) - 1);
+                            indicesVertices.add(Integer.parseInt(split[0]) - 1);
                             if(normals.size()!= 0 ) {
-                                indicesNormals.add(Integer.valueOf(split[1]) - 1);
-                                indicesTextures.add(Integer.valueOf(split[2]) - 1);
+                                indicesNormals.add(Integer.parseInt(split[1]) - 1);
+                                indicesTextures.add(Integer.parseInt(split[2]) - 1);
                             }else {
-                                indicesTextures.add(Integer.valueOf(split[1]) - 1);
+                                indicesTextures.add(Integer.parseInt(split[1]) - 1);
                             }
 
                         }
                         //if only vertices are saved in .obj file
                         else {
-                            indicesVertices.add(Integer.valueOf(parts[i]) - 1);
+                            indicesVertices.add(Integer.parseInt(parts[i]) - 1);
                         }
                     }
                 }
@@ -110,7 +110,7 @@ public class OBJFileReader{
     /*
     public static void main(String[] args) {
         OBJFileReader test = new OBJFileReader();
-        test.readFile("src/res/Cube2.obj");
+        test.readFile("src/res/Cube.obj");
     }
     */
 }

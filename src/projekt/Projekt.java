@@ -12,6 +12,7 @@ import lenz.opengl.AbstractOpenGLBase;
 import lenz.opengl.ShaderProgram;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
+import java.nio.IntBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class Projekt extends AbstractOpenGLBase {
 		glfwSetCursorPosCallback(this.getWindow(), cursorPos = new CursorInput());
 		glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);		//https://stackoverflow.com/questions/36951925/java-lwjgl-how-to-make-the-mouse-invisible
 
+
 		Mesh cube = new Mesh('A');
 		this.vaos.add(new VAO(cube, new Matrix4f()));
 
@@ -51,7 +53,6 @@ public class Projekt extends AbstractOpenGLBase {
 
 		Mesh tetraeder = new Mesh(1f);
 		this.vaos.add(new VAO(tetraeder, new Matrix4f()));
-
 
 
 		Mesh plane = new Mesh(0.);
@@ -67,8 +68,13 @@ public class Projekt extends AbstractOpenGLBase {
 		readFromFile = reader.readFile("src/res/Ball.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
+
 		reader = new OBJFileReader(new VectorF(1,1,0));
 		readFromFile = reader.readFile("src/res/Ball.obj");
+		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+
+		reader = new OBJFileReader(new VectorF(0.124f, 0.137f, 0.561f));
+		readFromFile = reader.readFile("src/res/MenuWriting.obj");
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 
@@ -89,42 +95,51 @@ public class Projekt extends AbstractOpenGLBase {
 	float offset = 0;
 	float delta = 0.05f;
 
-	int timerMenu = 0;
-	int timerPause = 0;
+	boolean isPressedBeforeESC = false;
+	boolean isPressedBeforeP = false;
 	boolean isInMenu = false;
 	boolean isPaused = false;
+	boolean isStarted = false;
 	@Override
 	public void update() {
 
-		if(timerMenu >= 15) {
-			if (KeyboardInput.keys[GLFW_KEY_ESCAPE]) {
-				//System.out.println("Escape pressed");
-				if (isInMenu) {
-					glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-					isInMenu = false;
-				}else{
-					glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-					isInMenu = true;
-				}
+		//Switch to show mouse
+		if (KeyboardInput.keys[GLFW_KEY_ESCAPE] && !isPressedBeforeESC) {
+			//System.out.println("Escape pressed");
+			if (isInMenu) {
+				glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				isInMenu = false;
+			}else{
+				glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				isInMenu = true;
 			}
-			timerMenu = 0;
+			isPressedBeforeESC = true;
+		}else if(KeyboardInput.keys[GLFW_KEY_ESCAPE] && isPressedBeforeESC){
+			//System.out.println("ESC was already pressed!");
+		}else {
+			isPressedBeforeESC = false;
 		}
-		timerMenu++;
 
-		if(timerPause >= 15){
-			if(KeyboardInput.keys[GLFW_KEY_P]){
-				if(isPaused){
-					isPaused = false;
-				}else {
-					isPaused = true;
-				}
+		//Switch to pause animation
+		if(KeyboardInput.keys[GLFW_KEY_P] && !isPressedBeforeP){
+			if(isPaused){
+				isPaused = false;
+			}else {
+				isPaused = true;
 			}
-			timerPause = 0;
+			isPressedBeforeP = true;
+		}else if(KeyboardInput.keys[GLFW_KEY_P] && isPressedBeforeP){
+			//System.out.println("P was already pressed!");
+		}else {
+			isPressedBeforeP = false;
 		}
-		timerPause++;
+
+		if(KeyboardInput.keys[GLFW_KEY_F] && !isStarted){
+			isStarted = true;
+		}
 
 
-		if(!isPaused) {
+		if (!isPaused) {
 			// Transformation durchführen (Matrix anpassen)
 
 			//Cube
@@ -155,13 +170,21 @@ public class Projekt extends AbstractOpenGLBase {
 			modelMatrix = new Matrix4f().translate(6, 0, 0).rotateY(angle).multiply(modelMatrix);
 			vaos.get(6).updateModel(modelMatrix);
 
-			camera.move().rotate();
-			viewMatrix = camera.view;	//new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
+			//File 4
+			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(90)).translate(-5, 5, -15);
+			vaos.get(7).updateModel(modelMatrix);
 
 			angle += 0.01;
 			offset += delta;
 			if (offset > 6.5 || offset < -6.5) {
 				delta *= -1;
+			}
+		}
+		if(isStarted) {
+			if (!isInMenu) {
+				viewMatrix = camera.move().rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
+			} else {
+				viewMatrix = camera.move().toMatrix();
 			}
 		}
 	}
@@ -175,7 +198,15 @@ public class Projekt extends AbstractOpenGLBase {
 		glUniformMatrix4fv(locMatrices[1], false, viewMatrix.getValuesAsArray());
 		glUniformMatrix4fv(locMatrices[2], false, projectionMatrix.getValuesAsArray());
 
-		for (VAO tmp : this.vaos) {
+		if(isStarted) {
+			for (int i = 0; i < vaos.size() - 1; i++) {
+				VAO tmp = vaos.get(i);
+				glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
+				glBindVertexArray(tmp.location);
+				glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
+			}
+		}else {
+			VAO tmp = vaos.get(vaos.size()-1);
 			glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
 			glBindVertexArray(tmp.location);
 			glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);

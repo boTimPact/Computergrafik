@@ -18,22 +18,22 @@ public class Camera {
 
     public Camera move() {
         if(KeyboardInput.keys[GLFW_KEY_SPACE]){
-            this.view.translate(0,-0.5f,0);
+            this.view.translate(0,-0.35f,0);
         }
         if(KeyboardInput.keys[GLFW_KEY_LEFT_SHIFT]){
-            this.view.translate(0,0.5f,0);
+            this.view.translate(0,0.35f,0);
         }
         if(KeyboardInput.keys[GLFW_KEY_A]){
-            this.view.translate(0.5f,0,0);
+            this.view.translate(0.35f,0,0);
         }
         if(KeyboardInput.keys[GLFW_KEY_D]){
-            this.view.translate(-0.5f,0,0);
+            this.view.translate(-0.35f,0,0);
         }
         if(KeyboardInput.keys[GLFW_KEY_W]){
-            this.view.translate(0,0,0.5f);
+            this.view.translate(0,0,0.35f);
         }
         if(KeyboardInput.keys[GLFW_KEY_S]){
-            this.view.translate(0,0,-0.5f);
+            this.view.translate(0,0,-0.35f);
         }
         if(KeyboardInput.keys[GLFW_KEY_DELETE]){
             this.pos = new VectorF(0,0,-1,1);
@@ -45,18 +45,21 @@ public class Camera {
         return this;
     }
 
-    public Camera rotate(){
-        float deltaX = camPosX - (float) CursorInput.xPos;
-        float deltaY = camPosY - (float) CursorInput.yPos;
-        camPosX = (float) CursorInput.xPos;
-        camPosY = (float) CursorInput.yPos;
 
-        
-        view.rotateX(-deltaY/1000).rotateY(deltaX/1000);
 
-        //System.out.println(deltaX + " " + deltaY);
+    public Camera rotate(float posX, float posY){
+        float deltaX = (posX - camPosX) * 0.1f;
+        float deltaY = (posY - camPosY) * 0.1f;
+        camPosX = posX;
+        camPosY = posY;
+
+        view.rotateVector(u.normalize(), deltaY).rotateVector(new VectorF(0,1,0), deltaX);
 
         return this;
+    }
+
+    public Matrix4f toMatrix(){
+        return this.view;
     }
 }
 
@@ -73,4 +76,5 @@ public class Camera {
         Space = Move Up
         Shift = Move Down
         Delete = Set Camera to Origin
+            Press F to Start
  */
