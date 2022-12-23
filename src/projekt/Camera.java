@@ -53,8 +53,10 @@ public class Camera {
         camPosX = posX;
         camPosY = posY;
 
-        view.rotateVector(u.normalize(), deltaY).rotateVector(new VectorF(0,1,0), deltaX);      //TODO: Fragen Camerarotation funktioniert
-
+        view.rotateVector(u.normalize(), deltaY).rotateVector(new VectorF(0,1,0), deltaX);
+        if(deltaX != 0 && deltaY != 0) {
+            System.out.println("X: " + deltaX + " Y: " + deltaY);
+        }
         return this;
     }
 

@@ -43,10 +43,10 @@ public class Projekt extends AbstractOpenGLBase {
 		glfwSetInputMode(this.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);		//https://stackoverflow.com/questions/36951925/java-lwjgl-how-to-make-the-mouse-invisible
 
 
+		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
 		Mesh cube = new Mesh('A');
 		this.vaos.add(new VAO(cube, new Matrix4f()));
 
-		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
 		Mesh pyramide = new Mesh(1);
 		this.vaos.add(new VAO(pyramide, new Matrix4f()));
 
@@ -59,23 +59,19 @@ public class Projekt extends AbstractOpenGLBase {
 		this.vaos.add(new VAO(plane, new Matrix4f()));
 
 
-		OBJFileReader reader = new OBJFileReader(new VectorF(1,1,1));
-		Mesh readFromFile = reader.readFile("src/res/MiniBike.obj");
+		Mesh readFromFile = new Mesh("src/res/MiniBike.obj", new VectorF(1,1,1));
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 
-		reader = new OBJFileReader(new VectorF(0,0,1));
-		readFromFile = reader.readFile("src/res/Ball.obj");
+		readFromFile = new Mesh("src/res/Ball.obj", new VectorF(0,0,1));
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 
-		reader = new OBJFileReader(new VectorF(1,1,0));
-		readFromFile = reader.readFile("src/res/Ball.obj");
+		readFromFile = new Mesh("src/res/Ball.obj", new VectorF(1,1,0));
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 
-		reader = new OBJFileReader(new VectorF(0.7f, 0.524f, 0.083f));
-		readFromFile = reader.readFile("src/res/MenuWriting.obj");
+		readFromFile = new Mesh("src/res/MenuWriting.obj", new VectorF(0.7f, 0.524f, 0.083f));
 		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
 
 
@@ -146,12 +142,11 @@ public class Projekt extends AbstractOpenGLBase {
 			isStarted = true;
 		}
 
-
 		if (!isPaused) {
 			// Transformation durchführen (Matrix anpassen)
 
 			//Cube
-			modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).translate(0, -5, -15);
+			modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(angle).translate(0, -5, -15);
 			vaos.get(0).updateModel(modelMatrix);
 
 			//Pyramide

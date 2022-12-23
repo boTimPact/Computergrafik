@@ -2,13 +2,13 @@ package projekt;
 
 import java.util.Arrays;
 
+
 public class Mesh {
     public VectorF vertices[];
     public VectorF normals[];
-    public VectorF textures[];
+    //public VectorF textures[];
     public int indicesVertices[];
-    public int indicesNormals[];
-    public int indicesTextures[];
+    //public int indicesTextures[];
     public VectorF color[];
 
     public Mesh(){
@@ -157,28 +157,15 @@ public class Mesh {
 
     }
 
-    public Mesh(int vLength, int iVLength, int nLength, int iNLength, int tLength, int iTLength, VectorF col){
-        this.vertices = new VectorF[vLength];
-        this.normals = new VectorF[nLength];
-        this.textures = new VectorF[tLength];
-        this.indicesVertices = new int[iVLength];
-        this.indicesNormals = new int[iNLength];
-        this.indicesTextures = new int[iTLength];
-        this.color = new VectorF[vertices.length];
-        Arrays.fill(color, col);        //for static coloring
-        /*
-        //for Color for Cube Testing
-        color = new VectorF[]{
-                new VectorF(1, 0, 0),
-                new VectorF(0, 1, 0),
-                new VectorF(0, 0, 1),
-                new VectorF(1, 1, 1),
-                new VectorF(1, 1, 0),
-                new VectorF(1, 0, 1),
-                new VectorF(0, 1, 1),
-                new VectorF(0.5f, 0.5f, 0.5f)
-        };
-        */
+    public Mesh(String path, VectorF color){
+        OBJFileReader reader = new OBJFileReader();
+        reader.readFile(this, path);
+        this.color = new VectorF[this.vertices.length];
+        for (int i = 0; i < this.color.length; i++) {
+            this.color[i] = color;
+        }
+        //Arrays.fill(this.color, color);
+        calcNormals();
     }
 
     public float[] vArrToArr(VectorF arr[]){
@@ -208,6 +195,32 @@ public class Mesh {
         }
         return out;
     }
+
+    public void calcNormals(){
+        this.normals = new VectorF[vertices.length];
+        for (int i = 0; i <= indicesVertices.length - 3; i += 3) {
+            VectorF vec1 = vertices[this.indicesVertices[i+1]].add(vertices[this.indicesVertices[i]].negate());
+            VectorF vec2 = vertices[this.indicesVertices[i+2]].add(vertices[this.indicesVertices[i]].negate());
+            this.normals[this.indicesVertices[i]] = vec1.cross(vec2).normalize();
+        }
+    }
+/*
+    public static void main(String[] args) {
+        Mesh test = new Mesh(1);
+        test.vertices = new VectorF[]{
+                new VectorF(0,0,0),
+                new VectorF(1,1,1),
+                new VectorF(-0.5f,0.5f,0.5f),
+        };
+        test.indicesVertices = new int[]{
+                0,1,2,
+                1,0,2
+        };
+
+        test.calcNormals();
+        System.out.println(test.normals[1].x + " " + test.normals[1].y + " " + test.normals[1].z);
+    }
+ */
 }
 
 
