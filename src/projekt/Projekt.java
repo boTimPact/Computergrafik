@@ -12,13 +12,13 @@ import lenz.opengl.AbstractOpenGLBase;
 import lenz.opengl.ShaderProgram;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import java.nio.IntBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class Projekt extends AbstractOpenGLBase {
 	private ShaderProgram shaderProgram;
+	private ShaderProgram shaderProgram2;
 	private List<VAO> vaos = new LinkedList<>();
 	Camera camera = new Camera();
 	private Matrix4f projectionMatrix;
@@ -30,13 +30,14 @@ public class Projekt extends AbstractOpenGLBase {
 	private GLFWCursorPosCallback cursorPos;
 
 	public static void main(String[] args) {
-		new Projekt().start("CG Projekt", 1920, 1080);
+		new Projekt().start("CG Projekt", 1920/2, 1200/2);
 	}
 
 	@Override
 	protected void init() {
 		shaderProgram = new ShaderProgram("projekt");
-		glUseProgram(shaderProgram.getId());
+		shaderProgram2 = new ShaderProgram("pjojectNoLighting");
+		glUseProgram(shaderProgram2.getId());
 
 		glfwSetKeyCallback(this.getWindow(), keyCallback = new KeyboardInput());
 		glfwSetCursorPosCallback(this.getWindow(), cursorPos = new CursorInput());
@@ -210,6 +211,7 @@ public class Projekt extends AbstractOpenGLBase {
 		glUniformMatrix4fv(locMatrices[2], false, projectionMatrix.getValuesAsArray());
 
 		if(isStarted) {
+			glUseProgram(shaderProgram.getId());
 			for (int i = 0; i < vaos.size() - 1; i++) {
 				VAO tmp = vaos.get(i);
 				glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
