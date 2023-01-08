@@ -1,5 +1,7 @@
 package projekt;
 
+import java.util.Objects;
+
 public class VectorF {
     public float x;
     public float y;
@@ -71,6 +73,16 @@ public class VectorF {
         out.y = this.z * other.x - this.x * other.z;
         out.z = this.x * other.y - this.y * other.x;
 
+        if(out.x == -0){
+            out.x = 0;
+        }
+        if(out.y == -0){
+            out.y = 0;
+        }
+        if(out.z == -0){
+            out.z = 0;
+        }
+
         return out;
     }
 
@@ -83,5 +95,18 @@ public class VectorF {
         out.z = (float) (this.z / amount);
 
         return out;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VectorF vectorF = (VectorF) o;
+        return Float.compare(vectorF.x, x) == 0 && Float.compare(vectorF.y, y) == 0 && Float.compare(vectorF.z, z) == 0 && Float.compare(vectorF.w, w) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z, w);
     }
 }

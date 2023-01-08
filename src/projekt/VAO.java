@@ -1,5 +1,7 @@
 package projekt;
 
+import lenz.opengl.Texture;
+
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -11,11 +13,13 @@ public class VAO {
     public int location;
     public Mesh mesh;
     public Matrix4f modelMatrix;
+    public Texture texture;
 
 
-    public VAO(Mesh mesh, Matrix4f model){
+    public VAO(Mesh mesh, Matrix4f model, String path){
         this.mesh = mesh;
         this.modelMatrix = model;
+        this.texture = new Texture(path, 5, true);
         location = glGenVertexArrays();
         glBindVertexArray(this.location);
         this.bindVBOs();
@@ -41,9 +45,17 @@ public class VAO {
 
         int vboNormals = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
-        glBufferData(GL_ARRAY_BUFFER, mesh.vArrToArr(this.mesh.vertices), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, mesh.vArrToArr(this.mesh.normals), GL_STATIC_DRAW);
         glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(2);
+
+        if(this.mesh.uv != null) {
+            int vboUV = glGenBuffers();
+            glBindBuffer(GL_ARRAY_BUFFER, vboUV);
+            glBufferData(GL_ARRAY_BUFFER, this.mesh.uv, GL_STATIC_DRAW);
+            glVertexAttribPointer(3, 2, GL_FLOAT, false, 0, 0);
+            glEnableVertexAttribArray(3);
+        }
 
         int vboIndices = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);

@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import lenz.opengl.Texture;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import projekt.input.CursorInput;
 import projekt.input.KeyboardInput;
@@ -30,13 +31,13 @@ public class Projekt extends AbstractOpenGLBase {
 	private GLFWCursorPosCallback cursorPos;
 
 	public static void main(String[] args) {
-		new Projekt().start("CG Projekt", 1920/2, 1200/2);
+		new Projekt().start("CG Projekt", (int)(1920/1.5), (int)(1200/1.5));
 	}
 
 	@Override
 	protected void init() {
 		shaderProgram = new ShaderProgram("projekt");
-		shaderProgram2 = new ShaderProgram("pjojectNoLighting");
+		shaderProgram2 = new ShaderProgram("projectNoLighting");
 		glUseProgram(shaderProgram2.getId());
 
 		glfwSetKeyCallback(this.getWindow(), keyCallback = new KeyboardInput());
@@ -46,42 +47,42 @@ public class Projekt extends AbstractOpenGLBase {
 
 		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
 		Mesh cube = new Mesh('A');
-		this.vaos.add(new VAO(cube, new Matrix4f()));
+		this.vaos.add(new VAO(cube, new Matrix4f(), "texture2.png"));
 
 		Mesh pyramide = new Mesh(1);
-		this.vaos.add(new VAO(pyramide, new Matrix4f()));
+		this.vaos.add(new VAO(pyramide, new Matrix4f(), "texture2.png"));
 
 
 		Mesh tetraeder = new Mesh(1f);
-		this.vaos.add(new VAO(tetraeder, new Matrix4f()));
+		this.vaos.add(new VAO(tetraeder, new Matrix4f(), "texture2.png"));
 
 
 		Mesh plane = new Mesh(0.);
-		this.vaos.add(new VAO(plane, new Matrix4f()));
+		this.vaos.add(new VAO(plane, new Matrix4f(), "fancy.jpg"));
 
 
 		Mesh readFromFile = new Mesh("src/res/MiniBike.obj", new VectorF(1,1,1));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "textureWood.png"));
 
 
 		readFromFile = new Mesh("src/res/Ball.obj", new VectorF(0,0,1));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "bluePlanet.jpg"));
 
 
 		readFromFile = new Mesh("src/res/Ball.obj", new VectorF(1,1,0));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "orangePlanet.jpg"));
 
 
 		readFromFile = new Mesh("src/res/MenuWriting.obj", new VectorF(0.7f, 0.524f, 0.083f));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "texture2.png"));
 
 
 /*
 		//Test for Lighting
-		OBJFileReader reader = new OBJFileReader(new VectorF(1,1,1));
-		Mesh readFromFile = reader.readFile("src/res/Cube.obj");
-		this.vaos.add(new VAO(readFromFile, new Matrix4f()));
+		Mesh cube = new Mesh('A');
+		this.vaos.add(new VAO(cube, new Matrix4f(), "texture2.png"));
 */
+
 
 		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
 		projectionMatrix = new Matrix4f(1, 500, 1.777f,1);
@@ -159,20 +160,23 @@ public class Projekt extends AbstractOpenGLBase {
 			vaos.get(2).updateModel(modelMatrix);
 
 			//Plane
-			modelMatrix = new Matrix4f().scale(1000).rotateX((float) Math.toRadians(-90)).translate(0, -20, -10);
+			modelMatrix = new Matrix4f().scale(5).rotateX((float) Math.toRadians(-90)).translate(0, -10, 0);
 			vaos.get(3).updateModel(modelMatrix);
 
 			//File 1
 			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(0)).rotateY(-angle).scale(2).translate(30, -10, -60);
 			vaos.get(4).updateModel(modelMatrix);
 
-			//File 2
-			modelMatrix = new Matrix4f().rotateY(angle).translate(0, 4, 0).rotateX(angle / 2).translate(0, -4, 0).scale(4).translate(-40, 30, -100);
+			//File 2 Ball 1
+			modelMatrix = new Matrix4f().translate(0, 0, -30).rotateY(angle/2).translate(-10,10,-100).scale(2);
 			vaos.get(5).updateModel(modelMatrix);
 
 			//File 3
-			modelMatrix = new Matrix4f().translate(6, 0, 0).rotateY(angle).multiply(modelMatrix);
+			modelMatrix = new Matrix4f().rotateZ(angle).translate(0, 0, 10).rotateY(angle).multiply(modelMatrix);
 			vaos.get(6).updateModel(modelMatrix);
+
+			modelMatrix = new Matrix4f().scale(5).rotateX(angle).rotateZ(angle).multiply(vaos.get(5).modelMatrix);
+			vaos.get(5).updateModel(modelMatrix);
 
 			//File 4
 			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(80)).translate(-5, 5, -15);
@@ -181,7 +185,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 /*
 			//Matrix for Testing
-			modelMatrix = new Matrix4f().rotateX(angle).rotateY(angle).rotateZ(0).scale(4).translate(0, 0, -8);
+			modelMatrix = new Matrix4f().rotateX(angle/2).rotateY(angle).rotateZ(angle/4).scale(2).translate(0, 0, -8);
 			vaos.get(0).updateModel(modelMatrix);
 */
 
@@ -210,29 +214,35 @@ public class Projekt extends AbstractOpenGLBase {
 		glUniformMatrix4fv(locMatrices[1], false, viewMatrix.getValuesAsArray());
 		glUniformMatrix4fv(locMatrices[2], false, projectionMatrix.getValuesAsArray());
 
-		if(isStarted) {
+		if(isStarted && !isInMenu) {
 			glUseProgram(shaderProgram.getId());
 			for (int i = 0; i < vaos.size() - 1; i++) {
 				VAO tmp = vaos.get(i);
 				glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
+				glBindTexture(GL_TEXTURE_2D, tmp.texture.getId());
 				glBindVertexArray(tmp.location);
 				glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
 			}
 		}else {
+			glUseProgram(shaderProgram2.getId());
 			VAO tmp = vaos.get(vaos.size()-1);
 			glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
+			glBindTexture(GL_TEXTURE_2D, tmp.texture.getId());
 			glBindVertexArray(tmp.location);
 			glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
 		}
+
 /*
 		//for Cube testing
 		for (int i = 0; i < vaos.size(); i++) {
+			glUseProgram(shaderProgram.getId());
 			VAO tmp = vaos.get(i);
+			glBindTexture(GL_TEXTURE_2D, tmp.texture.getId());
 			glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
 			glBindVertexArray(tmp.location);
 			glDrawElements(GL_TRIANGLES, tmp.mesh.indicesVertices.length, GL_UNSIGNED_INT, 0);
 		}
- */
+*/
 	}
 
 	@Override

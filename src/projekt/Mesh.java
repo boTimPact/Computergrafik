@@ -1,14 +1,13 @@
 package projekt;
 
-import java.util.Arrays;
+import java.util.*;
 
 
 public class Mesh {
     public VectorF vertices[];
     public VectorF normals[];
-    //public VectorF textures[];
+    public float uv[];
     public int indicesVertices[];
-    //public int indicesTextures[];
     public VectorF color[];
 
     public Mesh(){
@@ -41,6 +40,13 @@ public class Mesh {
                 new VectorF(1,0,0),
                 new VectorF(0,0,0)
         };
+
+        uv = new float[vertices.length * 2];
+        for (int i = 0; i < uv.length; i++) {
+            uv[i] = (float)Math.random();
+        }
+
+        calcNormals();
     }
 
     //Tetraeder
@@ -67,6 +73,13 @@ public class Mesh {
                 new VectorF(0,0,1),
                 new VectorF(1,0,0)
         };
+
+        uv = new float[vertices.length * 2];
+        for (int i = 0; i < uv.length; i++) {
+            uv[i] = (float)Math.random();
+        }
+
+        calcNormals();
     }
 
     //Plane
@@ -96,6 +109,15 @@ public class Mesh {
                 new VectorF(0.2f,0.4f,0.23f),
                 new VectorF(0.2f,0.4f,0.23f)
         };
+
+        uv = new float[]{
+                0,0,
+                0,1,
+                1,0,
+                1,1
+        };
+
+        calcNormals();
     }
 
     //Cube
@@ -155,6 +177,12 @@ public class Mesh {
 
         };
 
+        uv = new float[vertices.length * 2];
+        for (int i = 0; i < uv.length; i++) {
+            uv[i] = (float)Math.random();
+        }
+
+        calcNormals();
     }
 
     public Mesh(String path, VectorF color){
@@ -165,6 +193,10 @@ public class Mesh {
             this.color[i] = color;
         }
         //Arrays.fill(this.color, color);
+        uv = new float[vertices.length * 2];
+        for (int i = 0; i < uv.length; i++) {
+            uv[i] = (float)Math.random();
+        }
         calcNormals();
     }
 
@@ -198,29 +230,37 @@ public class Mesh {
 
     public void calcNormals(){
         this.normals = new VectorF[vertices.length];
+        Set<VectorF>[] normalSet = new Set[vertices.length];
+        for (int i = 0; i < normalSet.length; i++) {
+            normalSet[i] = new HashSet<VectorF>();
+        }
+        Arrays.fill(normals,new VectorF(0,0,0));
         for (int i = 0; i <= indicesVertices.length - 3; i += 3) {
             VectorF vec1 = vertices[this.indicesVertices[i+1]].add(vertices[this.indicesVertices[i]].negate());
             VectorF vec2 = vertices[this.indicesVertices[i+2]].add(vertices[this.indicesVertices[i]].negate());
-            this.normals[this.indicesVertices[i]] = vec1.cross(vec2).normalize();
+            VectorF normal = vec1.cross(vec2);
+            normalSet[this.indicesVertices[i]].add(normal);
+            normalSet[this.indicesVertices[i+1]].add(normal);
+            normalSet[this.indicesVertices[i+2]].add(normal);
+        }
+
+        for (int i = 0; i < normalSet.length; i++) {
+            VectorF sum = new VectorF(0,0,0);
+            for (VectorF e: normalSet[i]) {
+                sum = sum.add(e);
+            }
+            normals[i] = sum;
         }
     }
-/*
+
     public static void main(String[] args) {
-        Mesh test = new Mesh(1);
-        test.vertices = new VectorF[]{
-                new VectorF(0,0,0),
-                new VectorF(1,1,1),
-                new VectorF(-0.5f,0.5f,0.5f),
-        };
-        test.indicesVertices = new int[]{
-                0,1,2,
-                1,0,2
-        };
+        Mesh test = new Mesh('1');
+
 
         test.calcNormals();
-        System.out.println(test.normals[1].x + " " + test.normals[1].y + " " + test.normals[1].z);
+        System.out.println(test.normals[0].x + " " + test.normals[0].y + " " + test.normals[0].z);
     }
- */
+
 }
 
 

@@ -35,7 +35,7 @@ public class Camera {
         if(KeyboardInput.keys[GLFW_KEY_S]){
             this.view.translate(0,0,-0.35f);
         }
-        if(KeyboardInput.keys[GLFW_KEY_DELETE]){
+        if(KeyboardInput.keys[GLFW_KEY_0] || KeyboardInput.keys[GLFW_KEY_DELETE]){
             this.pos = new VectorF(0,0,-1,1);
             u = new VectorF(1,0,0);
             v = new VectorF(0,1,0);
@@ -54,9 +54,11 @@ public class Camera {
         camPosY = posY;
 
         view.rotateVector(u.normalize(), deltaY).rotateVector(new VectorF(0,1,0), deltaX);
+        /*
         if(deltaX != 0 && deltaY != 0) {
             System.out.println("X: " + deltaX + " Y: " + deltaY);
         }
+        */
         return this;
     }
 
