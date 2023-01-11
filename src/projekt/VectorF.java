@@ -48,11 +48,16 @@ public class VectorF {
     }
 
     //Skalarprodukt
-    public VectorF dot(float scalar){
-        VectorF out = new VectorF(this.x,this.y,this.z);
-        out.x *= scalar;
-        out.y *= scalar;
-        out.z *= scalar;
+    public float dot(VectorF other){
+        float out = this.x * other.x + this.y * other.y + this.z * other.z;
+        return out;
+    }
+
+    public VectorF multiplyScalar(float scalar){
+        VectorF out = new VectorF(0,0,0);
+        out.x = this.x * scalar;
+        out.y = this.y * scalar;
+        out.z = this.z * scalar;
 
         return out;
     }

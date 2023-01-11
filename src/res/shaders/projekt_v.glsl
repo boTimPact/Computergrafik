@@ -1,8 +1,8 @@
 #version 330
 
 out vec3 color;
-out vec3 n;
-out vec3 p;
+out vec3 normal;
+out vec3 pos;
 out vec2 uv;
 
 layout(location=0) in vec4 vertices;
@@ -18,10 +18,10 @@ void main(){
     color = newColor;
 
     mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
-    n = normalMatrix * normals;
-    n = normalize(n);
-    p = (modelMatrix * vertices).xyz;
-    p = normalize(p);
+    normal = normalMatrix * normals;
+    normal = normalize(normal);
+    pos = (modelMatrix * vertices).xyz;
+    pos = normalize(pos);
 
      uv = texPos;
 

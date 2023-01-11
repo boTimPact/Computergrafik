@@ -5,14 +5,14 @@ public class Quaternion {
     public VectorF vec;
 
 
-    public Quaternion(float angle, VectorF vector){
-        this.angle = (float)Math.toRadians(angle);
+    public Quaternion(float angleDeg, VectorF vector){
+        this.angle = (float)Math.toRadians(angleDeg);
         this.vec = new VectorF(vector.x *(float)Math.sin(Math.toRadians(angle)/2), vector.y *(float)Math.sin(Math.toRadians(angle)/2), vector.z *(float)Math.sin(Math.toRadians(angle)/2));
         this.angle = (float)Math.cos(angle / 2);
     }
 
     public Quaternion conjugate(){
-        return new Quaternion(0, new VectorF(-vec.x, -vec.y,-vec.z));
+        return new Quaternion(angle, new VectorF(-vec.x, -vec.y,-vec.z));
     }
 
     public Quaternion multiply(Quaternion other){
