@@ -54,13 +54,6 @@ public class Quaternion {
         out.vec.z = (this.angle * other.vec.z) + (this.vec.x * other.vec.y) - (this.vec.y * other.vec.x) + (this.vec.z * other.angle);
 
 
-
-/*
-        out.angle = (this.angle * other.angle) - (this.vec.x * other.vec.x) - (this.vec.y * other.vec.y) - (this.vec.z * other.vec.z);
-        out.vec.x = (this.angle * other.vec.x) + (this.vec.x * other.angle) + (this.vec.y * other.vec.z) - (this.vec.z * other.vec.y);
-        out.vec.y = (this.angle * other.vec.y) + (this.vec.z * other.angle) + (this.vec.z * other.vec.x) - (this.vec.x * other.vec.z);
-        out.vec.z = (this.angle * other.vec.z) + (this.vec.z * other.angle) + (this.vec.x * other.vec.y) - (this.vec.y * other.vec.x);
-*/
         return out;
     }
 

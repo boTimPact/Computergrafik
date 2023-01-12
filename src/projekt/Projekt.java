@@ -27,6 +27,7 @@ public class Projekt extends AbstractOpenGLBase {
 	private Matrix4f modelMatrix;
 	private int locMatrices[] = new int[3];
 
+
 	private GLFWKeyCallback keyCallback;
 	private GLFWCursorPosCallback cursorPos;
 
@@ -58,7 +59,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 
 		Mesh plane = new Mesh(0.);
-		this.vaos.add(new VAO(plane, new Matrix4f(), "Background.jpg", 5));
+		this.vaos.add(new VAO(plane, new Matrix4f(), "Background.jpg", 2));
 
 
 		Mesh readFromFile = new Mesh("src/res/MiniBike.obj", new VectorF(1,1,1));
@@ -200,7 +201,7 @@ public class Projekt extends AbstractOpenGLBase {
 			if (!isInMenu) {
 				viewMatrix = camera.move(this.vaos).rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
 			} else {
-				//viewMatrix = camera.move().toMatrix();
+				viewMatrix = camera.move(this.vaos).toMatrix();
 			}
 		}
 	}
@@ -216,7 +217,13 @@ public class Projekt extends AbstractOpenGLBase {
 
 		if(isStarted && !isInMenu) {
 			glUseProgram(shaderProgram.getId());
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 			for (int i = 0; i < vaos.size() - 1; i++) {
+				if(i > 3){
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				}
 				VAO tmp = vaos.get(i);
 				glUniformMatrix4fv(locMatrices[0], false, tmp.modelMatrix.getValuesAsArray());
 				glBindTexture(GL_TEXTURE_2D, tmp.texture.getId());
