@@ -47,34 +47,34 @@ public class Projekt extends AbstractOpenGLBase {
 
 		// Koordinaten, VAO, VBO, ... hier anlegen und im Grafikspeicher ablegen
 		Mesh cube = new Mesh('A');
-		this.vaos.add(new VAO(cube, new Matrix4f(), "texture2.png"));
+		this.vaos.add(new VAO(cube, new Matrix4f(), "red.png", 0));
 
 		Mesh pyramide = new Mesh(1);
-		this.vaos.add(new VAO(pyramide, new Matrix4f(), "texture2.png"));
+		this.vaos.add(new VAO(pyramide, new Matrix4f(), "texture2.png", 2));
 
 
 		Mesh tetraeder = new Mesh(1f);
-		this.vaos.add(new VAO(tetraeder, new Matrix4f(), "texture2.png"));
+		this.vaos.add(new VAO(tetraeder, new Matrix4f(), "texture2.png", 2));
 
 
 		Mesh plane = new Mesh(0.);
-		this.vaos.add(new VAO(plane, new Matrix4f(), "fancy.jpg"));
+		this.vaos.add(new VAO(plane, new Matrix4f(), "Background.jpg", 5));
 
 
 		Mesh readFromFile = new Mesh("src/res/MiniBike.obj", new VectorF(1,1,1));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "textureWood.png"));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "textureWood.png", 5));
 
 
 		readFromFile = new Mesh("src/res/Ball.obj", new VectorF(0,0,1));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "bluePlanet.jpg"));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "bluePlanet.jpg", 5));
 
 
 		readFromFile = new Mesh("src/res/Ball.obj", new VectorF(1,1,0));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "orangePlanet.jpg"));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "orangePlanet.jpg", 5));
 
 
 		readFromFile = new Mesh("src/res/MenuWriting.obj", new VectorF(0.7f, 0.524f, 0.083f));
-		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "texture2.png"));
+		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "texture2.png", 0));
 
 
 /*
@@ -85,7 +85,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 
 		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
-		projectionMatrix = new Matrix4f(1, 500, 1.777f,1);
+		projectionMatrix = new Matrix4f(1, 1000, 1.777f,1);
 
 		locMatrices[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix");
 		locMatrices[1] = glGetUniformLocation(shaderProgram.getId(), "viewMatrix");
@@ -160,7 +160,7 @@ public class Projekt extends AbstractOpenGLBase {
 			vaos.get(2).updateModel(modelMatrix);
 
 			//Plane
-			modelMatrix = new Matrix4f().scale(5).rotateX((float) Math.toRadians(-90)).translate(0, -10, 0);
+			modelMatrix = new Matrix4f().scale(500).rotateX((float) Math.toRadians(-90)).translate(0, -50, 0);
 			vaos.get(3).updateModel(modelMatrix);
 
 			//File 1
@@ -198,9 +198,9 @@ public class Projekt extends AbstractOpenGLBase {
 
 		if(isStarted) {
 			if (!isInMenu) {
-				viewMatrix = camera.move().rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
+				viewMatrix = camera.move(this.vaos).rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
 			} else {
-				viewMatrix = camera.move().toMatrix();
+				//viewMatrix = camera.move().toMatrix();
 			}
 		}
 	}

@@ -104,10 +104,10 @@ public class Mesh {
         };
 
         color = new VectorF[]{
-                new VectorF(0.2f,1f,0.23f),
-                new VectorF(0.2f,1f,0.23f),
-                new VectorF(0.2f,0.4f,0.23f),
-                new VectorF(0.2f,0.4f,0.23f)
+                new VectorF(1,1,1),
+                new VectorF(1,1,1),
+                new VectorF(1,1,1),
+                new VectorF(1,1,1),
         };
 
         uv = new float[]{
@@ -177,11 +177,16 @@ public class Mesh {
 
         };
 
-        uv = new float[vertices.length * 2];
-        for (int i = 0; i < uv.length; i++) {
-            uv[i] = (float)Math.random();
-        }
-
+        uv = new float[]{
+                0,0,
+                0,1,
+                1,0,
+                1,1,
+                0,0,
+                0,1,
+                1,0,
+                1,1
+        };
         calcNormals();
     }
 

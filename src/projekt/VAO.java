@@ -16,10 +16,11 @@ public class VAO {
     public Texture texture;
 
 
-    public VAO(Mesh mesh, Matrix4f model, String path){
+    public VAO(Mesh mesh, Matrix4f model, String path, int mipNumber){
         this.mesh = mesh;
         this.modelMatrix = model;
-        this.texture = new Texture(path, 5, true);
+        //
+        this.texture = new Texture(path, 0, true);
         location = glGenVertexArrays();
         glBindVertexArray(this.location);
         this.bindVBOs();
