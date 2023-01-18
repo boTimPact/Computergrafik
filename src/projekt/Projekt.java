@@ -25,9 +25,7 @@ public class Projekt extends AbstractOpenGLBase {
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Matrix4f modelMatrix;
-
-	private Matrix4f lightMatrix;
-	private int locMatrices[] = new int[4];
+	private int locMatrices[] = new int[3];
 
 
 	private GLFWKeyCallback keyCallback;
@@ -94,7 +92,6 @@ public class Projekt extends AbstractOpenGLBase {
 		locMatrices[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix");
 		locMatrices[1] = glGetUniformLocation(shaderProgram.getId(), "viewMatrix");
 		locMatrices[2] = glGetUniformLocation(shaderProgram.getId(), "projectionMatrix");
-		locMatrices[3] = glGetUniformLocation(shaderProgram.getId(), "lightMatrix");
 
 		glEnable(GL_DEPTH_TEST); // z-Buffer aktivieren
 		glEnable(GL_CULL_FACE); // backface culling aktivieren
@@ -218,7 +215,6 @@ public class Projekt extends AbstractOpenGLBase {
 		// VAOs zeichnen
 		glUniformMatrix4fv(locMatrices[1], false, viewMatrix.getValuesAsArray());
 		glUniformMatrix4fv(locMatrices[2], false, projectionMatrix.getValuesAsArray());
-		glUniformMatrix4fv(locMatrices[3], false, lightMatrix.getValuesAsArray());
 
 		if(isStarted && !isInMenu) {
 			glUseProgram(shaderProgram.getId());

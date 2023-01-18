@@ -112,7 +112,6 @@ public class Camera {
             VAO e = (VAO)vaos.get(i);
             e.modelMatrix.multiply(transMat);
         }
-        lightmatrix.multiply(transMat);
 
 
         return this;
