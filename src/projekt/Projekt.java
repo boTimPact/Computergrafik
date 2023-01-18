@@ -25,7 +25,9 @@ public class Projekt extends AbstractOpenGLBase {
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Matrix4f modelMatrix;
-	private int locMatrices[] = new int[3];
+
+	private Matrix4f lightMatrix;
+	private int locMatrices[] = new int[4];
 
 
 	private GLFWKeyCallback keyCallback;
@@ -37,7 +39,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 	@Override
 	protected void init() {
-		shaderProgram = new ShaderProgram("projekt");
+		shaderProgram = new ShaderProgram("projekt"); //pbrshader
 		shaderProgram2 = new ShaderProgram("projectNoLighting");
 		glUseProgram(shaderProgram2.getId());
 
@@ -87,10 +89,12 @@ public class Projekt extends AbstractOpenGLBase {
 
 		viewMatrix = new Matrix4f(camera.pos, camera.u, camera.v, camera.n);
 		projectionMatrix = new Matrix4f(1, 1000, 1.777f,1);
+		lightMatrix = new Matrix4f();
 
 		locMatrices[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix");
 		locMatrices[1] = glGetUniformLocation(shaderProgram.getId(), "viewMatrix");
 		locMatrices[2] = glGetUniformLocation(shaderProgram.getId(), "projectionMatrix");
+		locMatrices[3] = glGetUniformLocation(shaderProgram.getId(), "lightMatrix");
 
 		glEnable(GL_DEPTH_TEST); // z-Buffer aktivieren
 		glEnable(GL_CULL_FACE); // backface culling aktivieren
@@ -199,9 +203,9 @@ public class Projekt extends AbstractOpenGLBase {
 
 		if(isStarted) {
 			if (!isInMenu) {
-				viewMatrix = camera.move(this.vaos).rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
+				viewMatrix = camera.move(this.vaos, this.lightMatrix).rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
 			} else {
-				viewMatrix = camera.move(this.vaos).toMatrix();
+				viewMatrix = camera.move(this.vaos, this.lightMatrix).toMatrix();
 			}
 		}
 	}
@@ -214,6 +218,7 @@ public class Projekt extends AbstractOpenGLBase {
 		// VAOs zeichnen
 		glUniformMatrix4fv(locMatrices[1], false, viewMatrix.getValuesAsArray());
 		glUniformMatrix4fv(locMatrices[2], false, projectionMatrix.getValuesAsArray());
+		glUniformMatrix4fv(locMatrices[3], false, lightMatrix.getValuesAsArray());
 
 		if(isStarted && !isInMenu) {
 			glUseProgram(shaderProgram.getId());

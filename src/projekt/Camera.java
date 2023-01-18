@@ -36,7 +36,7 @@ public class Camera {
     private float translateY = 0;
     private float translateZ = 0;
 
-    public Camera move(List vaos) {
+    public Camera move(List vaos, Matrix4f lightmatrix) {
         /*
         //Move Camera
         if(KeyboardInput.keys[GLFW_KEY_SPACE]){
@@ -112,7 +112,7 @@ public class Camera {
             VAO e = (VAO)vaos.get(i);
             e.modelMatrix.multiply(transMat);
         }
-
+        lightmatrix.multiply(transMat);
 
 
         return this;
