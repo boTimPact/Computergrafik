@@ -36,7 +36,7 @@ public class Camera {
     private float translateY = 0;
     private float translateZ = 0;
 
-    public Camera move(List vaos, Matrix4f lightmatrix) {
+    public Camera move(List vaos) {
         /*
         //Move Camera
         if(KeyboardInput.keys[GLFW_KEY_SPACE]){
