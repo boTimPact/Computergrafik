@@ -4,7 +4,7 @@ _English version below_
 ## Dieses Projekt ist im Zuge des Kurses Computergrafik entstanden
 
 Im Praxisteil der Veranstaltung mussten der gelernte Stoff implementiert werden.<br>
-_Der Code im Package lenz/opengl wurde vom Professor bereit gestellt._
+_*Der Code im Package lenz/opengl wurde vom Professor bereit gestellt.*_
 
 Behandelte Themen:
 - Lightweight Java Gaming Library (LWJGL)
