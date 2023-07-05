@@ -37,6 +37,7 @@ Weitere Features:
 
 
 _English version_
+
 In the practical part of the course the learned material had to be implemented.<br>
 _The code in the package lenz/opengl was provided by the professor._
 
