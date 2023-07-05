@@ -70,3 +70,6 @@ Other features:
 - very simple .obj file reader
 
 ## Results:
+<img width="1278" alt="Bildschirm­foto 2023-07-05 um 11 07 17" src="https://github.com/boTimPact/Computergrafik/assets/119596476/353edc1d-e291-4655-94e9-180c5de16a09">
+<img width="1279" alt="Bildschirm­foto 2023-07-05 um 11 07 51" src="https://github.com/boTimPact/Computergrafik/assets/119596476/8817be70-206d-43df-9578-a5f6cc152586">
+<img width="1280" alt="Bildschirm­foto 2023-07-05 um 11 08 43" src="https://github.com/boTimPact/Computergrafik/assets/119596476/41b4ece3-275b-4f4c-bda8-772e234dca59">
