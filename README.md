@@ -40,7 +40,7 @@ _English version_
 ## This project was created in the course of the course computer graphics
 
 In the exercise part of the course the learned material had to be implemented.<br>
-_The code in the package lenz/opengl was provided by the professor._
+_**The code in the package lenz/opengl was provided by the professor.**_
 
 In the practical part of the course, the material learned had to be implemented.
 
