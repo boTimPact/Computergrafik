@@ -71,6 +71,8 @@ Other features:
   + Translation
   + Rotation using Quaternions
 - very simple .obj file reader
+<br>
+<br>
 
 ## Results:
 <img width="1278" alt="Bildschirm­foto 2023-07-05 um 11 07 17" src="https://github.com/boTimPact/Computergrafik/assets/119596476/353edc1d-e291-4655-94e9-180c5de16a09">
