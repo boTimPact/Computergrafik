@@ -125,6 +125,21 @@ public class Matrix4f {
 		return this;
 	}
 
+	public Matrix4f rotateVector(VectorF vec, float angle){
+		angle = (float)Math.toRadians(angle);
+		Matrix4f newMatrix = new Matrix4f();
+		newMatrix.matrix = new float[][]{
+				{(float) (Math.cos(angle) + vec.x*vec.x * (1 - Math.cos(angle))), (float) (vec.x * vec.y * (1 - Math.cos(angle)) - vec.z * Math.sin(angle)), (float) (vec.x * vec.z * (1 - Math.cos(angle)) + vec.y * Math.sin(angle)), 0},
+				{(float) (vec.x * vec.y * (1 - Math.cos(angle)) + vec.z * Math.sin(angle)), (float) (Math.cos(angle) + vec.y*vec.y * (1 - Math.cos(angle))), (float) (vec.y * vec.z * (1 - Math.cos(angle)) - vec.x * Math.sin(angle)), 0},
+				{(float) (vec.z * vec.x * (1 - Math.cos(angle)) - vec.y * Math.sin(angle)), (float) (vec.y * vec.z * (1 - Math.cos(angle)) + vec.x * Math.sin(angle)), (float) (Math.cos(angle) + vec.z*vec.z * (1 - Math.cos(angle))), 0},
+				{0,0,0,1}
+		};
+
+		this.multiply(newMatrix);
+
+		return this;
+	}
+
 	public float[] getValuesAsArray() {
 		// TODO hier Werte in einem Float-Array mit 16 Elementen (spaltenweise gefüllt) herausgeben
 		float arr[] = new float[16];

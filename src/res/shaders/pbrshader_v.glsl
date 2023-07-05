@@ -1,9 +1,9 @@
 #version 330
 
-out vec3 color;
 out vec3 normal;
-out vec3 pos;
+out vec3 fragmentPosition;
 out vec2 uv;
+out vec3 lightpos;
 
 layout(location=0) in vec4 vertices;
 layout(location=1) in vec3 newColor;
@@ -12,18 +12,19 @@ layout(location=3) in vec2 texPos;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 lightMatrix;
 
 
 void main(){
-    color = newColor;
-
+    // no lightmatrix yet!!
+    lightpos = (projectionMatrix * viewMatrix * lightMatrix * vec4(1,1,0,0)).rgb;
     mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
     normal = normalMatrix * normals;
-    normal = normalize(normal);
-    pos = (modelMatrix * vertices).xyz;
-    pos = normalize(pos);
+    normal = normalize(normals);
+    fragmentPosition = (modelMatrix * vertices).xyz;
+    fragmentPosition = normalize(fragmentPosition);
 
-     uv = texPos;
+    uv = texPos;
 
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vertices;
 }
