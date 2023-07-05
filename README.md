@@ -3,7 +3,7 @@ _English version below_
 
 ## Dieses Projekt ist im Zuge des Kurses Computergrafik entstanden
 
-Im Praxisteil der Veranstaltung mussten der gelernte Stoff implementiert werden.
+Im Praxisteil der Veranstaltung mussten der gelernte Stoff implementiert werden.<br>
 _Der Code im Package lenz/opengl wurde vom Professor bereit gestellt._
 
 Behandelte Themen:
@@ -37,7 +37,8 @@ Weitere Features:
 
 
 _English version_
-## This project was created as part of the GTAT1 Game Technology & Interactive Systems: Ray Tracing course.
+In the practical part of the course the learned material had to be implemented.<br>
+_The code in the package lenz/opengl was provided by the professor._
 
 In the practical part of the course, the material learned had to be implemented.
 
