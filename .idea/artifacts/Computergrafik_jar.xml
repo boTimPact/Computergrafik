@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Computergrafik:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Computergrafik_jar</output-path>
+    <root id="archive" name="Computergrafik.jar">
+      <element id="module-output" name="Computergrafik" />
+      <element id="module-source" name="Computergrafik" />
+    </root>
+  </artifact>
+</component>

@@ -13,6 +13,8 @@ import lenz.opengl.AbstractOpenGLBase;
 import lenz.opengl.ShaderProgram;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class Projekt extends AbstractOpenGLBase {
 
 	public static void main(String[] args) {
 		new Projekt().start("CG Projekt", (int)(1920/1.5), (int)(1200/1.5));
+		BufferedImage test = new BufferedImage(500,500, BufferedImage.TYPE_INT_RGB);
+		test.setRGB(0,0, 500,500,new int[500*500],0,500);
 	}
 
 	@Override
@@ -59,7 +63,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 
 		Mesh plane = new Mesh(0.);
-		this.vaos.add(new VAO(plane, new Matrix4f(), "Background.jpg", 2));
+		this.vaos.add(new VAO(plane, new Matrix4f(), "Background.jpg", 5));
 
 
 		Mesh readFromFile = new Mesh("src/res/MiniBike.obj", new VectorF(1,1,1));
@@ -73,9 +77,12 @@ public class Projekt extends AbstractOpenGLBase {
 		readFromFile = new Mesh("src/res/Ball.obj", new VectorF(1,1,0));
 		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "orangePlanet.jpg", 5));
 
+		this.vaos.add(new VAO(plane, new Matrix4f(), "chess.jpg", 5));
 
 		readFromFile = new Mesh("src/res/MenuWriting.obj", new VectorF(0.7f, 0.524f, 0.083f));
 		this.vaos.add(new VAO(readFromFile, new Matrix4f(), "texture2.png", 0));
+
+
 
 
 /*
@@ -179,9 +186,15 @@ public class Projekt extends AbstractOpenGLBase {
 			modelMatrix = new Matrix4f().scale(5).rotateX(angle).rotateZ(angle).multiply(vaos.get(5).modelMatrix);
 			vaos.get(5).updateModel(modelMatrix);
 
+			//Plane 2
+			modelMatrix = new Matrix4f().rotateY((float)Math.toRadians(45) + (float)Math.toRadians(offset*2)).scale(40).translate(200,0,-200);
+			vaos.get(7).updateModel(modelMatrix);
+
 			//File 4
 			modelMatrix = new Matrix4f().rotateX((float) Math.toRadians(80)).translate(-5, 5, -15);
-			vaos.get(7).updateModel(modelMatrix);
+			vaos.get(8).updateModel(modelMatrix);
+
+
 
 
 /*
@@ -198,9 +211,9 @@ public class Projekt extends AbstractOpenGLBase {
 		}
 
 		if(isStarted) {
-			if (!isInMenu) {
+			if(!isInMenu) {
 				viewMatrix = camera.move(this.vaos).rotate((float) CursorInput.xPos, (float) CursorInput.yPos).toMatrix();
-			} else {
+			}else{
 				viewMatrix = camera.move(this.vaos).toMatrix();
 			}
 		}

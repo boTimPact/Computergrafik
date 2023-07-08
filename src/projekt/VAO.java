@@ -20,7 +20,7 @@ public class VAO {
         this.mesh = mesh;
         this.modelMatrix = model;
         //
-        this.texture = new Texture(path, 0, true);
+        this.texture = new Texture(path, mipNumber, true);
         location = glGenVertexArrays();
         glBindVertexArray(this.location);
         this.bindVBOs();
