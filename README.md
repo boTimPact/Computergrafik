@@ -37,7 +37,7 @@ Weitere Features:
 <br>
 
 _English version_
-## This project was created in the course of the course computer graphics
+## This project was created as part of the course Computergraphics
 
 In the exercise part of the course the learned material had to be implemented.<br>
 _**The code in the package lenz/opengl was provided by the professor.**_
